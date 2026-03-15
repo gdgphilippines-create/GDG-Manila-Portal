@@ -1,4 +1,4 @@
-import { getActiveView, setActiveView, subscribeToActiveView } from '../services/view-sync'
+import { getActiveView, setActiveView, subscribeToActiveView } from '@/services/view-sync'
 
 export async function getActiveViewState() {
   return getActiveView()

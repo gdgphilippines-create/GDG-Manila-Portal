@@ -1,4 +1,4 @@
-import { config } from '../../lib/config'
+import { config } from '@/lib/config'
 
 export function track(eventName, payload = {}) {
   if (config.isDev) {

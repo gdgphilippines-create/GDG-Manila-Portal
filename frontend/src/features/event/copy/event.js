@@ -1,4 +1,4 @@
-import { VIEW_STATES } from '../state/viewState'
+import { VIEW_STATES } from '@/domain/view-state'
 
 export const eventViewsCopy = {
   [VIEW_STATES.WAITING]: {

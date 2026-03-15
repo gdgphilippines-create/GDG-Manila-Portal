@@ -1,4 +1,4 @@
-import { config } from '../lib/config'
+import { config } from '@/lib/config'
 import { setStoredToken } from './client'
 
 const AUTH_STORAGE_KEY = 'gdg-manila-auth-user'

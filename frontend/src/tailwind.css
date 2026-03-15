@@ -31,6 +31,7 @@
     font-family: var(--font-sans);
     background: rgb(var(--color-bg-page));
     color: rgb(var(--color-text-body));
+    scrollbar-gutter: stable;
   }
 
   button,

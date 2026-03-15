@@ -1,9 +1,9 @@
-import GlassPanel from '../../../components/ui/GlassPanel'
-import GoogleDots from '../../../components/ui/GoogleDots'
-import SectionHeader from '../../../components/ui/SectionHeader'
-import StatusBadge from '../../../components/ui/StatusBadge'
-import { VIEW_STATES } from '../../../state/viewState'
-import { eventViewsCopy } from '../../../copy/event'
+import { VIEW_STATES } from '@/domain/view-state'
+import GlassPanel from '@/components/ui/GlassPanel'
+import GoogleDots from '@/components/ui/GoogleDots'
+import SectionHeader from '@/components/ui/SectionHeader'
+import StatusBadge from '@/components/ui/StatusBadge'
+import { eventViewsCopy } from '../copy/event'
 
 export default function StatusCard({ activeView, error }) {
   const content = eventViewsCopy[activeView] ?? eventViewsCopy[VIEW_STATES.LOADING]

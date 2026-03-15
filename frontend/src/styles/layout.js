@@ -35,3 +35,15 @@ export const layout = {
     frosted: '6px',
   },
 }
+
+export const surfacePatterns = {
+  panelBodyClassName: 'pad-card md:px-10 md:py-10',
+  bannerGradientClassName:
+    'absolute inset-0 bg-[linear-gradient(135deg,_rgb(var(--color-bg-card))_0%,_rgb(var(--color-bg-page))_100%)]',
+  floatingIconButtonClassName:
+    'absolute right-8 top-8 inline-flex h-11 w-11 items-center justify-center rounded-full border border-divider bg-card text-muted transition-colors hover:text-heading',
+}
+
+export const typographyPatterns = {
+  tabLabelClassName: 'font-sans text-sm font-medium',
+}

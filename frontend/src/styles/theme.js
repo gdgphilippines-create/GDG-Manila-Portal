@@ -53,6 +53,36 @@ export const theme = {
   },
 }
 
+export const tonePatterns = {
+  accentActionClassNames: {
+    amber:
+      'border-warning/30 bg-warning-bg/80 text-warning hover:border-warning/60 hover:bg-warning-bg',
+    emerald:
+      'border-success/30 bg-success-bg/80 text-success hover:border-success/60 hover:bg-success-bg',
+    rose:
+      'border-error/30 bg-error-bg/80 text-error hover:border-error/60 hover:bg-error-bg',
+  },
+  statusClassNames: {
+    success: 'bg-success-bg text-success border-success/20',
+    warning: 'bg-warning/15 text-warning border-warning/20',
+    danger: 'bg-error-bg text-error border-error/20',
+    neutral: 'bg-slate-50 text-muted border-divider',
+  },
+}
+
+export function getInteractiveTabClassName(isActive) {
+  const activeTabClassName = 'border-primary'
+  const inactiveTabClassName = 'border-transparent hover:border-primary/35 active:translate-y-px'
+
+  return `relative rounded-t-2xl border-b-2 px-1 pb-4 pt-1 transition-all duration-200 ${
+    isActive ? activeTabClassName : inactiveTabClassName
+  }`
+}
+
+export function getInteractiveTabTextClassName(isActive) {
+  return isActive ? 'text-primary' : 'text-muted transition-colors duration-200 hover:text-primary'
+}
+
 function flattenTokens(sectionName, values) {
   return Object.entries(values).reduce((acc, [key, value]) => {
     if (typeof value === 'string') {

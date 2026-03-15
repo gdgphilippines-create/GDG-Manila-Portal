@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import ProtectedRoute from './components/guards/ProtectedRoute'
-import { AuthProvider } from './context/AuthContext.jsx'
-import AdminView from './views/admin/AdminView'
-import UserView from './views/user/UserView'
+import { AuthProvider } from '@/auth/AuthProvider'
+import ProtectedRoute from '@/components/guards/ProtectedRoute'
+import AdminView from '@/views/admin/AdminView'
+import UserView from '@/views/user/UserView'
 
 function App() {
   return (

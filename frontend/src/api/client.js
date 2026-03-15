@@ -1,5 +1,5 @@
-import { config } from '../lib/config'
-import { ApiError, AuthError, NetworkError } from '../lib/errors'
+import { config } from '@/lib/config'
+import { ApiError, AuthError, NetworkError } from '@/lib/errors'
 
 const authTokenStorageKey = 'gdg-manila-auth-token'
 

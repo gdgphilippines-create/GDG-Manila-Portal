@@ -3,7 +3,7 @@ import {
   getCurrentUser,
   login as loginRequest,
   logout as logoutRequest,
-} from '../api/auth'
+} from '@/api/auth'
 import { AuthContext } from './authContext'
 
 export function AuthProvider({ children }) {

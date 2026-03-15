@@ -1,10 +1,10 @@
-import PageShell from '../../components/layout/PageShell'
-import AdminSection from '../../features/admin/components/AdminSection'
+import PageShell from '@/components/layout/PageShell'
+import AdminScreen from '@/features/admin/AdminScreen'
 
 export default function AdminView() {
   return (
     <PageShell>
-      <AdminSection />
+      <AdminScreen />
     </PageShell>
   )
 }

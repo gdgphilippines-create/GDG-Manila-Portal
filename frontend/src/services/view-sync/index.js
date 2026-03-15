@@ -1,4 +1,4 @@
-import { config } from '../../lib/config'
+import { config } from '@/lib/config'
 import { localStorageProvider } from './providers/localStorageProvider'
 import { firebaseProvider } from './providers/firebaseProvider'
 

@@ -1,11 +1,4 @@
-import { VIEW_STATES } from '../state/viewState'
-
-export const adminPageCopy = {
-  eyebrow: 'Admin Panel',
-  title: 'Event Control Center',
-  description:
-    'Control the attendee experience from one place and reuse the same state model across every screen.',
-}
+import { VIEW_STATES } from '@/domain/view-state'
 
 export const adminActionsCopy = [
   {

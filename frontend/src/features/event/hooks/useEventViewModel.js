@@ -1,6 +1,6 @@
-import { useActiveView } from '../../../hooks/useActiveView'
+import { useActiveView } from '@/services/view-sync/useActiveView'
 
-export function useMachine() {
+export function useEventViewModel() {
   const { activeView, error, status } = useActiveView()
 
   return {
