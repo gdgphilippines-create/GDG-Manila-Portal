@@ -1,10 +1,10 @@
 const toneClassNames = {
   amber:
-    'border-[#fbbc04]/30 bg-[#fbbc04]/10 hover:border-[#fbbc04]/60 hover:bg-[#fbbc04]/16 text-[#b06000]',
+    'border-warning/30 bg-warning/10 text-warning-text hover:border-warning/60 hover:bg-warning/15',
   emerald:
-    'border-[#34a853]/30 bg-[#34a853]/10 hover:border-[#34a853]/60 hover:bg-[#34a853]/16 text-[#137333]',
+    'border-success/30 bg-success/10 text-success-text hover:border-success/60 hover:bg-success/15',
   rose:
-    'border-[#ea4335]/30 bg-[#ea4335]/10 hover:border-[#ea4335]/60 hover:bg-[#ea4335]/16 text-[#c5221f]',
+    'border-danger/30 bg-danger/10 text-danger-text hover:border-danger/60 hover:bg-danger/15',
 }
 
 export default function ActionButton({ action, disabled, onSelect }) {
@@ -12,13 +12,13 @@ export default function ActionButton({ action, disabled, onSelect }) {
 
   return (
     <button
-      className={`rounded-2xl border px-5 py-5 text-left transition duration-200 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-60 ${toneClassName}`}
+      className={`rounded-button border px-card-x py-5 text-left shadow-session transition duration-200 hover:shadow-card disabled:cursor-not-allowed disabled:opacity-60 ${toneClassName}`}
       disabled={disabled}
       onClick={() => onSelect(action.view)}
       type="button"
     >
-      <span className="block text-sm font-medium uppercase tracking-wide">{action.label}</span>
-      <span className="mt-2 block text-lg font-medium text-[#202124]">{action.description}</span>
+      <span className="type-label block">{action.label}</span>
+      <span className="type-body mt-2 block text-heading">{action.description}</span>
     </button>
   )
 }

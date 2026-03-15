@@ -9,8 +9,8 @@ export default function StatusCard({ activeView, error }) {
   const content = eventViewsCopy[activeView] ?? eventViewsCopy[VIEW_STATES.LOADING]
 
   return (
-    <GlassPanel className="max-w-[600px]">
-      <div className="px-8 pb-10 pt-12 text-center md:px-12">
+    <GlassPanel className="mx-auto max-w-card-narrow" variant="card">
+      <div className="pad-card text-center md:px-12 md:pt-12 md:pb-10">
         <GoogleDots className="mb-8" />
         <div className="mb-8">
           <StatusBadge>{content.badge}</StatusBadge>
@@ -20,9 +20,9 @@ export default function StatusCard({ activeView, error }) {
           description={content.description}
           title={content.title}
         />
-        {error ? <p className="mt-4 text-sm text-[#c5221f]">{error}</p> : null}
+        {error ? <p className="type-body mt-4 text-error">{error}</p> : null}
         {activeView === VIEW_STATES.LOADING ? (
-          <div className="mx-auto mt-12 h-12 w-12 rounded-full border-4 border-[#e8eaed] border-t-google-blue animate-spin" />
+          <div className="mx-auto mt-12 h-12 w-12 animate-spin rounded-full border-4 border-spinner-track border-t-primary" />
         ) : null}
       </div>
     </GlassPanel>

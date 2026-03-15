@@ -9,8 +9,8 @@ export default function AdminSection() {
   const { updateView, status, error } = useMachine()
 
   return (
-    <GlassPanel className="mx-auto max-w-4xl">
-      <div className="p-8 md:p-10">
+    <GlassPanel className="mx-auto max-w-content" variant="card">
+      <div className="pad-card md:px-10 md:py-10">
         <GoogleDots className="mb-8 justify-start" />
         <div className="mb-10">
           <SectionHeader
@@ -19,7 +19,7 @@ export default function AdminSection() {
             title={adminPageCopy.title}
           />
         </div>
-        {error ? <p className="mb-4 text-sm text-[#c5221f]">{error}</p> : null}
+        {error ? <p className="type-body mb-4 text-error">{error}</p> : null}
         <ActionGrid
           actions={adminActionsCopy}
           isPending={status === 'loading'}

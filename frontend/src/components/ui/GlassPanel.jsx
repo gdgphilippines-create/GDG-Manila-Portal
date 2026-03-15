@@ -1,7 +1,15 @@
-export default function GlassPanel({ children, className = '' }) {
+const variantClassNames = {
+  card: 'rounded-card border border-divider',
+  dialog: 'surface-dialog rounded-dialog shadow-dropdown',
+  auth: 'surface-auth rounded-card shadow-auth',
+}
+
+export default function GlassPanel({ children, className = '', variant = 'card' }) {
+  const variantClassName = variantClassNames[variant] ?? variantClassNames.card
+
   return (
     <section
-      className={`w-full overflow-hidden rounded-[24px] border border-white bg-white shadow-[0_1px_3px_rgba(60,64,67,0.3),0_4px_8px_3px_rgba(60,64,67,0.15)] ${className}`.trim()}
+      className={`w-full overflow-hidden bg-card ${variantClassName} ${className}`.trim()}
     >
       {children}
     </section>

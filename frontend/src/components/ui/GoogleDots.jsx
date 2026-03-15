@@ -1,4 +1,4 @@
-const dotClassNames = ['bg-google-blue', 'bg-google-red', 'bg-google-yellow', 'bg-google-green']
+const dotClassNames = ['bg-brand-blue', 'bg-brand-red', 'bg-brand-yellow', 'bg-brand-green']
 
 export default function GoogleDots({ className = '' }) {
   return (

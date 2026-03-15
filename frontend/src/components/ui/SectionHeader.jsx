@@ -5,13 +5,13 @@ export default function SectionHeader({ eyebrow, title, description, align = 'le
   return (
     <header className={textAlignment}>
       {eyebrow ? (
-        <p className="text-sm uppercase tracking-[0.18em] text-[#5f6368]">{eyebrow}</p>
+        <p className="type-label">{eyebrow}</p>
       ) : null}
-      <h1 className="mt-3 text-3xl font-medium leading-tight tracking-[-0.03em] text-[#202124] md:text-5xl">
+      <h1 className="type-hero mt-3">
         {title}
       </h1>
       {description ? (
-        <p className={`mt-5 text-lg leading-relaxed text-[#5f6368] ${descriptionWidth}`}>{description}</p>
+        <p className={`type-body mt-5 text-muted ${descriptionWidth}`}>{description}</p>
       ) : null}
     </header>
   )

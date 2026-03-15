@@ -1,11 +1,14 @@
 export default function PageShell({ children, centered = false }) {
-  const layoutClassName = centered
-    ? 'flex items-center justify-center'
-    : ''
+  const layoutClassName = centered ? 'flex items-center justify-center' : ''
+  const contentClassName = centered
+    ? 'layout-content flex-1 items-center justify-center'
+    : 'layout-content'
 
   return (
-    <main className={`min-h-screen px-6 py-12 text-[#3C4043] md:px-12 ${layoutClassName}`.trim()}>
-      {children}
+    <main className={`layout-page text-body ${layoutClassName}`.trim()}>
+      <div className={contentClassName}>
+        {children}
+      </div>
     </main>
   )
 }

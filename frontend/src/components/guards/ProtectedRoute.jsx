@@ -6,7 +6,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   const location = useLocation()
 
   if (loading) {
-    return <div className="px-6 py-10 text-center text-sm text-[#5f6368]">Checking session...</div>
+    return <div className="type-body px-6 py-10 text-center text-muted">Checking session...</div>
   }
 
   if (!isAuthenticated) {
@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
 
   if (requiredRole && user?.role !== requiredRole) {
     return (
-      <div className="px-6 py-10 text-center text-sm text-[#c5221f]">
+      <div className="type-body px-6 py-10 text-center text-error">
         You do not have access to this area.
       </div>
     )

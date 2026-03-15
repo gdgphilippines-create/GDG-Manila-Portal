@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Google Sans', 'Google Sans Text', 'Product Sans', ui-sans-serif, system-ui,
+      sans-serif;
+    --font-display:
+      'Google Sans Display', 'Google Sans', 'Google Sans Text', 'Product Sans', ui-sans-serif,
+      system-ui, sans-serif;
+    --font-label: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+    color: rgb(var(--color-text-body));
+    background:
+      radial-gradient(circle at top, rgb(var(--theme-primary) / 0.08), transparent 40%),
+      linear-gradient(180deg, rgb(var(--color-bg-card)) 0%, rgb(var(--color-bg-page)) 100%);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    background: rgb(var(--color-bg-page));
+    color: rgb(var(--color-text-body));
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .type-hero {
+    @apply font-display text-type-hero text-heading;
+  }
+
+  .type-section-heading {
+    @apply font-sans text-type-section-heading text-heading;
+  }
+
+  .type-nav-brand {
+    @apply font-sans text-type-nav-brand text-heading;
+  }
+
+  .type-body {
+    @apply font-sans text-type-body text-body;
+  }
+
+  .type-meta {
+    @apply font-label text-type-meta text-muted;
+  }
+
+  .type-label {
+    @apply font-label text-type-label uppercase text-muted;
+  }
+
+  .type-copyright {
+    @apply font-label text-type-copyright uppercase text-muted;
+  }
+
+  .frosted-nav {
+    @apply bg-card/80 backdrop-blur-frosted;
+  }
+}
