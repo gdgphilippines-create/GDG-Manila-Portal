@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GDG Portal Test Bench</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 600px; margin: 20px auto; }
+        input, textarea { width: 95%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; background: #4285F4; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #3367d6; }
+        
+        /* Alert Banner Styles */
+        #global-alert-banner { 
+            display: none; padding: 15px; margin-bottom: 20px; border-radius: 8px; 
+            text-align: center; font-weight: bold; border: 2px solid;
+        }
+        .info { background: #e8f0fe; border-color: #4285F4; color: #1967d2; }
+        .urgent { background: #fce8e6; border-color: #d93025; color: #a50e0e; animation: blink 1s infinite; }
+        
+        @keyframes blink { 50% { opacity: 0.7; } }
+        
+        .admin-section { margin-top: 30px; border-top: 2px dashed #ccc; pt: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="global-alert-banner"></div>
+
+<div class="card">
+    <h2>Attendee Login</h2>
+    <input type="email" id="login-email" placeholder="Enter attendee email">
+    <button onclick="login()">Login</button>
+    <div id="login-result" style="margin-top: 15px;"></div>
+</div>
+
+<div class="card admin-section">
+    <h2>Admin Broadcast Panel</h2>
+    <p><small>Only emails in the <code>ORGANIZERS</code> list will work here.</small></p>
+    <input type="email" id="admin-email" placeholder="Your Admin Email">
+    <textarea id="alert-msg" placeholder="Type an announcement..."></textarea>
+    <select id="alert-type" style="padding: 10px; margin-bottom: 10px;">
+        <option value="info">Information (Blue)</option>
+        <option value="urgent">Urgent (Red)</option>
+    </select>
+    <br>
+    <button onclick="postAlert()" style="background: #db4437;">Broadcast Alert</button>
+    <div id="admin-result" style="margin-top: 15px;"></div>
+</div>
+
+<script>
+    const BASE_URL = 'https://gdg-middleware-746952812448.asia-southeast1.run.app';
+
+    // AUTO-FETCH ALERTS ON LOAD
+    window.onload = function() {
+        fetchAlert();
+    };
+
+    async function fetchAlert() {
+        const banner = document.getElementById('global-alert-banner');
+        try {
+            const res = await fetch(BASE_URL + '/api/alerts');
+            const data = await res.json();
+            
+            if (data.active) {
+                banner.style.display = 'block';
+                banner.innerText = '📢 ' + data.message;
+                banner.className = data.type; 
+            } else {
+                banner.style.display = 'none';
+            }
+        } catch (e) { console.error("Alert fetch failed", e); }
+    }
+
+    async function login() {
+        const email = document.getElementById('login-email').value;
+        const result = document.getElementById('login-result');
+        result.innerHTML = "Verifying...";
+
+        try {
+            const res = await fetch(BASE_URL + '/api/auth/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                result.innerHTML = '<b style="color:green">Welcome ' + data.user.firstName + '! Role: ' + data.user.role + '</b>';
+            } else {
+                result.innerHTML = '<b style="color:red">Denied: ' + data.message + '</b>';
+            }
+        } catch (err) { 
+            console.error(err);
+            result.innerHTML = "Error connecting to middleware."; 
+        }
+    }
+
+    async function postAlert() {
+    const email = document.getElementById('admin-email').value;
+    const message = document.getElementById('alert-msg').value;
+    const type = document.getElementById('alert-type').value;
+    const result = document.getElementById('admin-result');
+
+    try {
+        // Change this line to include /api/alerts
+        const res = await fetch(BASE_URL + '/api/alerts', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, message: message, type: type })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            result.innerHTML = '<b style="color:green">Alert Broadcasted!</b>';
+            fetchAlert(); 
+        } else {
+            // This will tell us if it's a 403 Unauthorized error
+            result.innerHTML = '<b style="color:red">Failed: ' + (data.error || 'Check Permissions') + '</b>';
+        }
+    } catch (err) { 
+        console.error(err);
+        result.innerHTML = "Error connecting to middleware."; 
+    }
+}
+</script>
+
+</body>
+</html>
