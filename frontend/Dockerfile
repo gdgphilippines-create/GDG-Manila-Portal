@@ -3,14 +3,30 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+ARG VITE_API_BASE_URL=http://localhost:3001/api
+ARG VITE_WS_URL=ws://localhost:3001
+ARG VITE_FIREBASE_PROJECT_ID=
+ARG VITE_FIREBASE_API_KEY=
+ARG VITE_ENV=production
+ARG VITE_VIEW_SYNC_PROVIDER=local-storage
+ARG VITE_ENABLE_MOCK_AUTH=true
+
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_WS_URL=$VITE_WS_URL
+ENV VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID
+ENV VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY
+ENV VITE_ENV=$VITE_ENV
+ENV VITE_VIEW_SYNC_PROVIDER=$VITE_VIEW_SYNC_PROVIDER
+ENV VITE_ENABLE_MOCK_AUTH=$VITE_ENABLE_MOCK_AUTH
+
 # Copy package files first to leverage Docker layer caching
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the source code
 COPY . .
 
-# Build the app (Vite will use .env.production if it exists)
+# Build the app with explicit Vite env values
 RUN npm run build
 
 # --- Stage 2: Serve with Nginx ---

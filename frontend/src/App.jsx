@@ -1,19 +1,27 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import UserView from './views/user/UserView';
-import AdminView from './views/admin/AdminView';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import ProtectedRoute from './components/guards/ProtectedRoute'
+import { AuthProvider } from './context/AuthContext.jsx'
+import AdminView from './views/admin/AdminView'
+import UserView from './views/user/UserView'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public route for attendees */}
-        <Route path="/" element={<UserView />} />
-
-        {/* Private-ish route for you to control the event */}
-        <Route path="/admin-panel" element={<AdminView />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<UserView />} />
+          <Route
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminView />
+              </ProtectedRoute>
+            }
+            path="/admin-panel"
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  )
 }
 
-export default App;
+export default App
