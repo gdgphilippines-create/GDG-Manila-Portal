@@ -1,4 +1,4 @@
-import { VIEW_STATES } from '@/domain/view-state'
+import { VIEW_STATES } from '@/core/constants'
 
 export const adminStatusCopy = {
   updating: {

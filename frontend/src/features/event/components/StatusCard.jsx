@@ -1,4 +1,4 @@
-import { VIEW_STATES } from '@/domain/view-state'
+import { VIEW_STATES } from '@/core/constants'
 import GlassPanel from '@/components/ui/GlassPanel'
 import GoogleDots from '@/components/ui/GoogleDots'
 import SectionHeader from '@/components/ui/SectionHeader'

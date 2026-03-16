@@ -1,5 +1,5 @@
 import PageShell from '@/components/layout/PageShell'
-import EventSection from '@/features/event/components/EventSection'
+import { EventSection } from '@/features/event'
 
 export default function UserView() {
   return (

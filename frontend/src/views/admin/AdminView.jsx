@@ -1,5 +1,5 @@
 import PageShell from '@/components/layout/PageShell'
-import AdminScreen from '@/features/admin/AdminScreen'
+import { AdminScreen } from '@/features/admin'
 
 export default function AdminView() {
   return (
