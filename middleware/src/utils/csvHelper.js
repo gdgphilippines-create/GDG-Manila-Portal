@@ -1,12 +1,37 @@
+/**
+ * @file Utility functions for handling CSV data stored in Google Cloud Storage.
+ * Primarily used for cross-referencing attendee registrations against a master roster.
+ * @module Utils/CSVHelper
+ * @requires @google-cloud/storage
+ * @requires csv-parser
+ * @requires ../config/gdg-constants
+ */
+
 const { Storage } = require('@google-cloud/storage');
 const csv = require('csv-parser');
-const { GCS } = require('../config/gdg-constants'); // Pulling bucket name from your new config
+const { GCS } = require('../config/gdg-constants');
 
+/**
+ * Initialized Google Cloud Storage client.
+ * @type {Storage}
+ */
 const storage = new Storage();
 
 /**
- * Utility to stream the roster CSV from Google Cloud Storage
- * and search for a specific email.
+ * Searches for a specific user within a CSV file stored in GCS via streaming.
+ * * This function handles large datasets efficiently by piping the GCS read stream 
+ * directly into the CSV parser without loading the entire file into memory.
+ * * @function findUserInCSV
+ * @async
+ * @param {string} email - The email address to search for in the roster.
+ * @returns {Promise<Object|null>} Resolves with the full row object if the user is found, 
+ * or `null` if the search completes without a match.
+ * @throws {Error} Rejects if there is an issue accessing the GCS bucket or reading the file.
+ * * @example
+ * const user = await findUserInCSV('mels@example.com');
+ * if (user) {
+ * console.log('User Found:', user['First Name']);
+ * }
  */
 const findUserInCSV = (email) => {
   return new Promise((resolve, reject) => {
