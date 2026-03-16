@@ -3,7 +3,7 @@ import { EventSection } from '@/features/event'
 
 export default function UserView() {
   return (
-    <PageShell centered>
+    <PageShell>
       <EventSection />
     </PageShell>
   )
