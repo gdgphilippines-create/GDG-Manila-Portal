@@ -71,10 +71,10 @@ export const tonePatterns = {
 }
 
 export function getInteractiveTabClassName(isActive) {
-  const activeTabClassName = 'border-primary'
-  const inactiveTabClassName = 'border-transparent hover:border-primary/35 active:translate-y-px'
+  const activeTabClassName = ''
+  const inactiveTabClassName = 'active:translate-y-px'
 
-  return `relative rounded-t-2xl border-b-2 px-1 pb-4 pt-1 transition-all duration-200 ${
+  return `relative inline-flex rounded-t-2xl px-1 pb-4 pt-1 transition-all duration-200 ${
     isActive ? activeTabClassName : inactiveTabClassName
   }`
 }

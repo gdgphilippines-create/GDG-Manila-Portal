@@ -1,7 +1,27 @@
 import { config } from '@/lib/config'
+import { ROLES } from '@/core/constants/roles'
 import { setStoredToken } from './client'
 
 const AUTH_STORAGE_KEY = 'gdg-manila-auth-user'
+
+function normalizeRole(role) {
+  if (role === 'admin') {
+    return ROLES.ADMIN
+  }
+
+  return role
+}
+
+function normalizeUser(user) {
+  if (!user) {
+    return null
+  }
+
+  return {
+    ...user,
+    role: normalizeRole(user.role),
+  }
+}
 
 function readStoredUser() {
   if (typeof window === 'undefined') {
@@ -15,7 +35,7 @@ function readStoredUser() {
   }
 
   try {
-    return JSON.parse(rawValue)
+    return normalizeUser(JSON.parse(rawValue))
   } catch {
     return null
   }
@@ -27,7 +47,7 @@ function writeStoredUser(user) {
   }
 
   if (user) {
-    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
+    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(normalizeUser(user)))
     return
   }
 
@@ -38,7 +58,7 @@ export async function login(credentials = {}) {
   const user = {
     id: 'local-admin',
     email: credentials.email || 'admin@gdgmanila.local',
-    role: 'admin',
+    role: ROLES.ADMIN,
   }
 
   writeStoredUser(user)
@@ -75,7 +95,7 @@ export async function getCurrentUser() {
   const defaultUser = {
     id: 'local-admin',
     email: 'admin@gdgmanila.local',
-    role: 'admin',
+    role: ROLES.ADMIN,
   }
 
   writeStoredUser(defaultUser)

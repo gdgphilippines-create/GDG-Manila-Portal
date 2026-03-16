@@ -1,6 +1,7 @@
+import { Suspense } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import AdminSection from '@/features/admin/components/AdminSection'
 import {
-  adminActionsCopy,
   adminOverviewLabels,
   getAdminStatusPill,
 } from '@/features/admin/copy'
@@ -10,16 +11,19 @@ import { useAdminViewModel } from '@/features/admin/hooks/useAdminViewModel'
 export default function AdminScreen() {
   const { currentView, updateView, isPending, error } = useAdminViewModel()
   const currentStatus = getAdminStatusPill(currentView, isPending)
+  const location = useLocation()
+  const activeTab = location.pathname.split('/').filter(Boolean).at(-1) ?? 'overview'
 
   return (
     <AdminSection
-      actions={adminActionsCopy}
+      activeTab={activeTab}
       currentStatus={currentStatus}
-      error={error}
       event={adminOverviewDetails}
-      isPending={isPending}
       labels={adminOverviewLabels}
-      onSelect={updateView}
-    />
+    >
+      <Suspense fallback={<p className="type-body text-muted">Loading section...</p>}>
+        <Outlet context={{ currentStatus, currentView, error, isPending, updateView }} />
+      </Suspense>
+    </AdminSection>
   )
 }

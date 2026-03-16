@@ -4,6 +4,7 @@ import {
   login as loginRequest,
   logout as logoutRequest,
 } from '@/api/auth'
+import { ROLES } from '@/core/constants/roles'
 import { AuthContext } from './authContext'
 
 export function AuthProvider({ children }) {
@@ -49,7 +50,7 @@ export function AuthProvider({ children }) {
     user,
     loading,
     isAuthenticated: Boolean(user),
-    isAdmin: user?.role === 'admin',
+    isAdmin: user?.role === ROLES.ADMIN,
     login,
     logout,
   }
