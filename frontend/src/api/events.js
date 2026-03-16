@@ -1,11 +1,12 @@
 import { getActiveViewState } from './views'
+import { eventPortalMeta } from '@/features/event/data/portalMeta'
 
 export async function getEventDetails() {
   const activeView = await getActiveViewState()
 
   return {
     activeView,
-    title: 'GDG Manila Event Portal',
+    title: eventPortalMeta.title,
   }
 }
 

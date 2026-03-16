@@ -1,12 +1,17 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/app/hooks'
+import { protectedRouteCopy } from '@/app/copy'
 
 export default function ProtectedRoute({ children, requiredRole }) {
   const { isAuthenticated, loading, user } = useAuth()
   const location = useLocation()
 
   if (loading) {
-    return <div className="type-body px-6 py-10 text-center text-muted">Checking session...</div>
+    return (
+      <div className="type-body px-6 py-10 text-center text-muted">
+        {protectedRouteCopy.checkingSessionLabel}
+      </div>
+    )
   }
 
   if (!isAuthenticated) {
@@ -16,7 +21,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   if (requiredRole && user?.role !== requiredRole) {
     return (
       <div className="type-body px-6 py-10 text-center text-error">
-        You do not have access to this area.
+        {protectedRouteCopy.unauthorizedLabel}
       </div>
     )
   }
