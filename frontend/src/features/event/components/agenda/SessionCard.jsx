@@ -1,4 +1,14 @@
-import { LuBot, LuCirclePlay, LuEye, LuMapPin, LuUserRound } from 'react-icons/lu'
+import {
+  LuArrowDown,
+  LuArrowUp,
+  LuBot,
+  LuCirclePlay,
+  LuEye,
+  LuGripVertical,
+  LuMapPin,
+  LuPencilLine,
+  LuUserRound,
+} from 'react-icons/lu'
 import { programCopy } from '../../copy/programCopy'
 
 function RobotIllustration() {
@@ -41,7 +51,44 @@ function BreakActionButton({ action, label, onAction }) {
   )
 }
 
-export default function SessionCard({ onAction, session }) {
+function AdminControls() {
+  return (
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-divider bg-footer px-4 py-3">
+      <div className="inline-flex items-center gap-2 text-sm text-muted">
+        <LuGripVertical aria-hidden="true" className="h-4 w-4" />
+        <span>Admin controls</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <button
+          className="inline-flex items-center gap-2 rounded-lg border border-divider bg-card px-3 py-2 text-xs font-semibold text-muted"
+          disabled
+          type="button"
+        >
+          <LuPencilLine aria-hidden="true" className="h-4 w-4" />
+          <span>Edit</span>
+        </button>
+        <button
+          className="inline-flex items-center gap-2 rounded-lg border border-divider bg-card px-3 py-2 text-xs font-semibold text-muted"
+          disabled
+          type="button"
+        >
+          <LuArrowUp aria-hidden="true" className="h-4 w-4" />
+          <span>Move up</span>
+        </button>
+        <button
+          className="inline-flex items-center gap-2 rounded-lg border border-divider bg-card px-3 py-2 text-xs font-semibold text-muted"
+          disabled
+          type="button"
+        >
+          <LuArrowDown aria-hidden="true" className="h-4 w-4" />
+          <span>Move down</span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function SessionCard({ isAdmin = false, onAction, session }) {
   const timeLabel = `${session.schedule.startTime} - ${session.schedule.endTime}`
 
   if (session.type === 'break') {
@@ -50,6 +97,7 @@ export default function SessionCard({ onAction, session }) {
 
     return (
       <article className="rounded-[28px] border border-dashed border-warning/30 bg-warning-bg/90 p-8">
+        {isAdmin ? <AdminControls /> : null}
         <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-warning">
           {timeLabel}
         </span>
@@ -66,6 +114,7 @@ export default function SessionCard({ onAction, session }) {
   return (
     <article className="flex flex-col justify-between rounded-[28px] border border-divider bg-card p-8 shadow-sm transition-shadow hover:shadow-md md:flex-row">
       <div className="flex-1">
+        {isAdmin ? <AdminControls /> : null}
         <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-primary">
           {timeLabel}
         </span>

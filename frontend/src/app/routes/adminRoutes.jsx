@@ -4,8 +4,9 @@ import {
   AdminAlertsRoute,
   AdminInsightsRoute,
   AdminOverviewRoute,
-  AdminProgramRoute,
+  ProgramManageView,
 } from '@/features/admin'
+import ProgramPage from '@/views/program/ProgramPage'
 import AdminView from '@/views/admin/AdminView'
 
 export const adminRoutes = [
@@ -25,7 +26,12 @@ export const adminRoutes = [
       },
       {
         path: 'program',
-        element: <AdminProgramRoute />,
+        isProtected: true,
+        element: (
+          <ProgramManageView>
+            <ProgramPage isAdmin withPageShell={false} />
+          </ProgramManageView>
+        ),
       },
       {
         path: 'alerts',

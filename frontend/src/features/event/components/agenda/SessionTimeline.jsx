@@ -11,7 +11,7 @@ function TimelineDot({ type }) {
   )
 }
 
-export default function SessionTimeline({ groups = [], onAction }) {
+export default function SessionTimeline({ groups = [], isAdmin = false, onAction }) {
   return (
     <section className="mt-20" data-purpose="agenda-timeline">
       {groups.map((group) => (
@@ -32,7 +32,7 @@ export default function SessionTimeline({ groups = [], onAction }) {
               {group.sessions.map((session) => (
                 <div className="relative pl-8" key={session.id}>
                   <TimelineDot type={session.type} />
-                  <SessionCard onAction={onAction} session={session} />
+                  <SessionCard isAdmin={isAdmin} onAction={onAction} session={session} />
                 </div>
               ))}
             </div>
