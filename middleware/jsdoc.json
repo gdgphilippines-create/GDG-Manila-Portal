@@ -1,0 +1,21 @@
+{
+  "plugins": [
+    "plugins/markdown",
+    "node_modules/jsdoc-plugin-typescript"
+  ],
+  "source": {
+    "include": ["middleware", "routes", "utils", "index.js"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true,
+    "readme": "README.md",
+    "template": "templates/default"
+  },
+  "markdown": {
+    "hardwrap": false,
+    "idInHeadings": true
+  }
+}
