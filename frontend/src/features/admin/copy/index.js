@@ -1,3 +1,6 @@
-export { adminActionsCopy } from './actions'
-export { adminOverviewLabels } from './overviewLabels'
-export { adminStatusCopy, getAdminStatusPill } from './status'
+export {
+	adminActionsCopy,
+	adminOverviewLabels,
+	adminStatusCopy,
+	getAdminStatusPill,
+} from '@/copy/admin'

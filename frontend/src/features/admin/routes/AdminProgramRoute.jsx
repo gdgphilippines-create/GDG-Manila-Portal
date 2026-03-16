@@ -1,7 +1,7 @@
 import GlassPanel from '@/components/ui/GlassPanel'
 import SectionHeader from '@/components/ui/SectionHeader'
-import { adminActionsCopy, adminOverviewLabels } from '@/features/admin/copy'
-import ActionGrid from '@/features/admin/components/controls/ActionGrid'
+import { adminActionsCopy, adminOverviewLabels } from '@/copy/admin'
+import ActionGrid from '../components/controls/ActionGrid'
 import { surfacePatterns } from '@/styles/layout'
 import { useOutletContext } from 'react-router-dom'
 

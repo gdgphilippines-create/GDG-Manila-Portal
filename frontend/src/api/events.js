@@ -1,12 +1,12 @@
 import { getActiveViewState } from './views'
-import { eventPortalMeta } from '@/features/event/data/portalMeta'
+import { eventPortalCopy } from '@/copy/event'
 
 export async function getEventDetails() {
   const activeView = await getActiveViewState()
 
   return {
     activeView,
-    title: eventPortalMeta.title,
+    title: eventPortalCopy.portalTitle,
   }
 }
 

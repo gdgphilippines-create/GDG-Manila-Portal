@@ -1,9 +1,11 @@
 import { Navigate } from 'react-router-dom'
 import { ROLES } from '@/core/constants/roles'
-import AdminAlertsRoute from '@/features/admin/routes/AdminAlertsRoute'
-import AdminInsightsRoute from '@/features/admin/routes/AdminInsightsRoute'
-import AdminOverviewRoute from '@/features/admin/routes/AdminOverviewRoute'
-import AdminProgramRoute from '@/features/admin/routes/AdminProgramRoute'
+import {
+  AdminAlertsRoute,
+  AdminInsightsRoute,
+  AdminOverviewRoute,
+  AdminProgramRoute,
+} from '@/features/admin'
 import AdminView from '@/views/admin/AdminView'
 
 export const adminRoutes = [

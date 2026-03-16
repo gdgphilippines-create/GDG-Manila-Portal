@@ -2,12 +2,7 @@ import InteractiveTabs from '@/components/layout/InteractiveTabs'
 import ViewFrame from '@/components/layout/ViewFrame'
 import StatusPill from '@/components/ui/StatusPill'
 
-const ADMIN_TABS = {
-  OVERVIEW: 'overview',
-  PROGRAM: 'program',
-  ALERTS: 'alerts',
-  INSIGHTS: 'insights',
-}
+import { ADMIN_TABS, ADMIN_TAB_ROUTES } from '../constants'
 
 export default function AdminSection({
   activeTab,
@@ -17,10 +12,10 @@ export default function AdminSection({
   labels,
 }) {
   const tabs = [
-    { id: ADMIN_TABS.OVERVIEW, label: labels.overviewTabLabel, to: '/admin-panel/overview' },
-    { id: ADMIN_TABS.PROGRAM, label: labels.programTabLabel, to: '/admin-panel/program' },
-    { id: ADMIN_TABS.ALERTS, label: labels.alertsTabLabel, to: '/admin-panel/alerts' },
-    { id: ADMIN_TABS.INSIGHTS, label: labels.insightsTabLabel, to: '/admin-panel/insights' },
+    { id: ADMIN_TABS.OVERVIEW, label: labels.overviewTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.OVERVIEW] },
+    { id: ADMIN_TABS.PROGRAM, label: labels.programTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.PROGRAM] },
+    { id: ADMIN_TABS.ALERTS, label: labels.alertsTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.ALERTS] },
+    { id: ADMIN_TABS.INSIGHTS, label: labels.insightsTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.INSIGHTS] },
   ]
 
   return (

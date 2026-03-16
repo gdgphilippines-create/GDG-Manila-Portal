@@ -1,7 +1,7 @@
 import StatusPill from '@/components/ui/StatusPill'
-import { adminOverviewLabels } from '@/features/admin/copy'
-import AdminOverviewCard from '@/features/admin/components/overview/AdminOverviewCard'
-import { adminOverviewDetails } from '@/features/admin/data'
+import { adminOverviewLabels } from '@/copy/admin'
+import AdminOverviewCard from '../components/overview/AdminOverviewCard'
+import { adminOverviewDetails } from '../data'
 import { useOutletContext } from 'react-router-dom'
 
 export default function AdminOverviewRoute() {

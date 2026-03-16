@@ -1,6 +1,6 @@
 import GlassPanel from '@/components/ui/GlassPanel'
 import SectionHeader from '@/components/ui/SectionHeader'
-import { adminOverviewLabels } from '@/features/admin/copy'
+import { adminOverviewLabels } from '@/copy/admin'
 import { surfacePatterns } from '@/styles/layout'
 
 export default function AdminInsightsRoute() {

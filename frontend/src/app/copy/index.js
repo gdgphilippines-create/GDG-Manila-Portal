@@ -1,2 +1,1 @@
-export { navbarCopy } from './navigation'
-export { protectedRouteCopy } from './route-guard'
+export { navbarCopy, protectedRouteCopy } from '@/copy/common'

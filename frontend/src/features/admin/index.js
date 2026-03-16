@@ -1,1 +1,5 @@
 export { default as AdminScreen } from './AdminScreen'
+export { default as AdminOverviewRoute } from './routes/AdminOverviewRoute'
+export { default as AdminProgramRoute } from './routes/AdminProgramRoute'
+export { default as AdminAlertsRoute } from './routes/AdminAlertsRoute'
+export { default as AdminInsightsRoute } from './routes/AdminInsightsRoute'

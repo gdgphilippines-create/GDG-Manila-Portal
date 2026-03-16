@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/app/hooks'
-import { protectedRouteCopy } from '@/app/copy'
+import { protectedRouteCopy } from '@/copy/common'
 
 export default function ProtectedRoute({ allowedRoles, children, requiredRole }) {
   const { isAuthenticated, loading, user } = useAuth()

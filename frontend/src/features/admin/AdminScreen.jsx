@@ -1,18 +1,19 @@
 import { Suspense } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import AdminSection from '@/features/admin/components/AdminSection'
+import AdminSection from './components/AdminSection'
+import { DEFAULT_ADMIN_TAB } from './constants'
 import {
   adminOverviewLabels,
   getAdminStatusPill,
-} from '@/features/admin/copy'
-import { adminOverviewDetails } from '@/features/admin/data'
-import { useAdminViewModel } from '@/features/admin/hooks/useAdminViewModel'
+} from '@/copy/admin'
+import { adminOverviewDetails } from './data'
+import { useAdminViewModel } from './hooks/useAdminViewModel'
 
 export default function AdminScreen() {
   const { currentView, updateView, isPending, error } = useAdminViewModel()
   const currentStatus = getAdminStatusPill(currentView, isPending)
   const location = useLocation()
-  const activeTab = location.pathname.split('/').filter(Boolean).at(-1) ?? 'overview'
+  const activeTab = location.pathname.split('/').filter(Boolean).at(-1) ?? DEFAULT_ADMIN_TAB
 
   return (
     <AdminSection

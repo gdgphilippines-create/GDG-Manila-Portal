@@ -1,16 +1,1 @@
-export const adminOverviewLabels = {
-  aboutTitle: 'About',
-  editEventLabel: 'Edit event',
-  tabsAriaLabel: 'Admin sections',
-  overviewTabLabel: 'Overview',
-  programTabLabel: 'Program',
-  alertsTabLabel: 'Alerts',
-  insightsTabLabel: 'Insights',
-  insightsEyebrow: 'Insights',
-  insightsTitle: 'Event insights',
-  insightsDescription: 'Analytics and attendee trends will appear here.',
-  controlsEyebrow: 'Stream Controls',
-  controlsTitle: 'Update attendee state',
-  alertsEyebrow: 'Alerts',
-  alertsTitle: 'Status',
-}
+export { adminOverviewLabels } from '@/copy/admin'
