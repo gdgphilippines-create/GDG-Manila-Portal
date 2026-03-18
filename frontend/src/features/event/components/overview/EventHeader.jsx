@@ -9,16 +9,16 @@ export default function EventHeader({
   title,
 }) {
   return (
-    <section className="lg:col-span-8" data-purpose="event-header">
+    <section className="lg:col-span-8 lg:pr-6" data-purpose="event-header">
       <h1 className="font-display text-4xl font-bold tracking-tight text-heading md:text-5xl">
         {title}
       </h1>
-      <p className="mt-6 max-w-3xl text-lg leading-relaxed text-muted">
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-body">
         {description}
       </p>
       {onReadMore ? (
         <button
-          className="mt-4 inline-flex items-center gap-1 font-medium text-primary transition hover:underline"
+          className="mt-6 inline-flex items-center gap-2 rounded-full border border-divider bg-white px-4 py-2.5 text-sm font-semibold text-heading shadow-sm transition hover:border-primary/40 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
           onClick={onReadMore}
           type="button"
         >

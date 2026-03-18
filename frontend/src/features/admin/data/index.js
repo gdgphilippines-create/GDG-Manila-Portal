@@ -1,1 +1,0 @@
-export { adminOverviewDetails } from './overviewDetails'

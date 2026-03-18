@@ -1,6 +1,5 @@
-import InteractiveTabs from '@/components/layout/InteractiveTabs'
-import ViewFrame from '@/components/layout/ViewFrame'
-import StatusPill from '@/components/ui/StatusPill'
+import { InteractiveTabs, ViewFrame } from '@/components/layout'
+import { StatusPill } from '@/components/ui'
 
 import { ADMIN_TABS, ADMIN_TAB_ROUTES } from '../constants'
 
@@ -14,8 +13,8 @@ export default function AdminSection({
   const tabs = [
     { id: ADMIN_TABS.OVERVIEW, label: labels.overviewTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.OVERVIEW] },
     { id: ADMIN_TABS.PROGRAM, label: labels.programTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.PROGRAM] },
+    { id: ADMIN_TABS.STREAM, label: labels.streamTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.STREAM] },
     { id: ADMIN_TABS.ALERTS, label: labels.alertsTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.ALERTS] },
-    { id: ADMIN_TABS.INSIGHTS, label: labels.insightsTabLabel, to: ADMIN_TAB_ROUTES[ADMIN_TABS.INSIGHTS] },
   ]
 
   return (

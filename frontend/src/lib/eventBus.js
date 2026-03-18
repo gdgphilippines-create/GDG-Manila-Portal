@@ -4,6 +4,8 @@ export const EVENT_BUS_EVENTS = {
   VIEW_CHANGED: 'view:changed',
   AUTH_EXPIRED: 'auth:expired',
   EVENT_UPDATED: 'event:updated',
+  PROGRAM_CHANGED: 'program:changed',
+  ALERTS_CHANGED: 'alerts:changed',
   NOTIFICATION_RECEIVED: 'notification:received',
 }
 

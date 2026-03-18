@@ -1,4 +1,4 @@
-import Popover from '@/components/ui/Popover'
+import { Popover } from '@/components/ui'
 import { useAuth } from '@/app/hooks/useAuth'
 import { navbarCopy } from '@/copy/common'
 import gdgLogo from '@/assets/BWAI-26-main-Logo-lockups-horizontal.png'
@@ -16,18 +16,19 @@ function ProfileAvatar({ name }) {
     : '?'
 
   return (
-    <span className="flex h-10 w-10 items-center justify-center rounded-avatar border border-divider bg-slate-100 text-sm font-semibold text-heading transition-colors duration-200">
+    <span className="flex h-10 w-10 items-center justify-center rounded-avatar border border-divider bg-slate-100 text-sm font-semibold text-heading shadow-[0_1px_3px_rgba(15,23,42,0.12),0_1px_2px_rgba(15,23,42,0.08)] transition-colors duration-200">
       {initials || '?'}
     </span>
   )
 }
 
-export default function Navbar() {
+export default function Navbar({ contentWidthClassName = 'max-w-content' }) {
   const { user, logout } = useAuth()
+  const displayName = user?.firstName || user?.name
 
   return (
     <header className="border-b border-divider bg-white/95 backdrop-blur-sm">
-      <div className="mx-auto grid w-full max-w-content grid-cols-[1fr_auto_1fr] items-center px-section-x py-4 md:flex md:justify-between">
+      <div className={`mx-auto grid w-full ${contentWidthClassName} grid-cols-[1fr_auto_1fr] items-center px-section-x py-4 md:flex md:justify-between`.trim()}>
         <div className="justify-self-start md:hidden">
           <button
             aria-label={navbarCopy.mobileMenuAriaLabel}
@@ -56,7 +57,7 @@ export default function Navbar() {
                 className="inline-flex items-center rounded-full border border-transparent p-1 transition-colors duration-200 hover:border-divider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 type="button"
               >
-                <ProfileAvatar name={user?.name} />
+                <ProfileAvatar name={displayName} />
               </button>
             }
           >
@@ -64,7 +65,7 @@ export default function Navbar() {
               <div role="menu" className="overflow-hidden rounded-dialog bg-white">
                 {user ? (
                   <div className="border-b border-divider px-4 py-3">
-                    <p className="text-sm font-semibold text-heading">{user.name}</p>
+                    <p className="text-sm font-semibold text-heading">{displayName}</p>
                     <p className="mt-1 text-sm text-muted">{user.email}</p>
                   </div>
                 ) : (

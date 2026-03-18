@@ -1,15 +1,39 @@
 import { config } from '@/lib/config'
 import { ROLES } from '@/core/constants/roles'
-import { setStoredToken } from './client'
+import { apiRequest, setStoredToken } from './client'
 
 const AUTH_STORAGE_KEY = 'gdg-manila-auth-user'
+const MOCK_AUTH_ERROR_MESSAGE = 'Email not found in registry'
+const MOCK_AUTH_ROSTER = [
+  {
+    email: 'admin@gdg.test',
+    role: 'admin',
+    firstName: 'Admin',
+  },
+  {
+    email: 'facilitator@gdg.test',
+    role: 'facilitator',
+    firstName: 'Faci',
+  },
+  {
+    email: 'user@gdg.test',
+    role: 'participant',
+    firstName: 'Participant',
+  },
+]
 
 function normalizeRole(role) {
-  if (role === 'admin') {
-    return ROLES.ADMIN
+  switch (String(role || '').toLowerCase()) {
+    case 'admin':
+      return ROLES.ADMIN
+    case 'facilitator':
+      return ROLES.FACILITATOR
+    case 'participant':
+    case 'attendee':
+      return ROLES.PARTICIPANT
+    default:
+      return role
   }
-
-  return role
 }
 
 function normalizeUser(user) {
@@ -19,6 +43,8 @@ function normalizeUser(user) {
 
   return {
     ...user,
+    id: user.id || user.email,
+    name: user.name || user.firstName || user.email,
     role: normalizeRole(user.role),
   }
 }
@@ -54,17 +80,52 @@ function writeStoredUser(user) {
   window.localStorage.removeItem(AUTH_STORAGE_KEY)
 }
 
-export async function login(credentials = {}) {
-  const user = {
-    id: 'local-admin',
-    email: credentials.email || 'admin@gdgmanila.local',
-    role: ROLES.ADMIN,
+/**
+ * @typedef {Object} VerifiedUser
+ * @property {string} email
+ * @property {'ADMIN' | 'FACILITATOR' | 'PARTICIPANT'} role
+ * @property {string} [firstName]
+ * @property {string} [id]
+ */
+
+/**
+ * @typedef {Object} UserVerificationResponse
+ * @property {boolean} success
+ * @property {VerifiedUser} [user]
+ * @property {string} [error]
+ */
+
+/**
+ * Verifies a user against the backend auth route and returns the normalized user.
+ *
+ * Mirrors `POST /api/auth/verify` from the backend auth router.
+ *
+ * @param {string} email
+ * @returns {Promise<UserVerificationResponse>}
+ */
+export async function verifyUser(email) {
+  const normalizedEmail = String(email || '').trim().toLowerCase()
+
+  if (config.enableMockAuth) {
+    const mockUser = MOCK_AUTH_ROSTER.find((entry) => entry.email === normalizedEmail)
+
+    if (!mockUser) {
+      return {
+        success: false,
+        error: MOCK_AUTH_ERROR_MESSAGE,
+      }
+    }
+
+    return {
+      success: true,
+      user: mockUser,
+    }
   }
 
-  writeStoredUser(user)
-  setStoredToken('local-dev-token')
-
-  return user
+  return apiRequest('/auth/verify', {
+    method: 'POST',
+    body: JSON.stringify({ email: normalizedEmail }),
+  })
 }
 
 export async function logout() {
@@ -72,34 +133,18 @@ export async function logout() {
   setStoredToken('')
 }
 
-export async function refreshToken() {
-  if (!config.enableMockAuth) {
-    return null
-  }
-
-  setStoredToken('local-dev-token')
-  return 'local-dev-token'
+export async function getCurrentUser() {
+  return readStoredUser()
 }
 
-export async function getCurrentUser() {
-  const storedUser = readStoredUser()
+export function getAuthEmail() {
+  const user = readStoredUser()
+  return String(user?.email || '').trim().toLowerCase()
+}
 
-  if (storedUser) {
-    return storedUser
-  }
-
-  if (!config.enableMockAuth) {
-    return null
-  }
-
-  const defaultUser = {
-    id: 'local-admin',
-    email: 'admin@gdgmanila.local',
-    role: ROLES.ADMIN,
-  }
-
-  writeStoredUser(defaultUser)
-  setStoredToken('local-dev-token')
-
-  return defaultUser
+export function persistVerifiedUser(user) {
+  const normalizedUser = normalizeUser(user)
+  writeStoredUser(normalizedUser)
+  setStoredToken('')
+  return normalizedUser
 }

@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import { VIEW_STATES } from '@/core/constants'
 import { createAsyncState, asyncReducer } from '@/lib/asyncState'
-import { getActiveViewState, subscribeToView } from '@/api/views'
+import { getActiveViewState, subscribeToView } from './views'
 
 export function useActiveView() {
   const [state, dispatch] = useReducer(

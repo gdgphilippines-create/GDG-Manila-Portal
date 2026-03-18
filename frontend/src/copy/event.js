@@ -1,9 +1,5 @@
 import { VIEW_STATES } from '@/core/constants'
 
-export const eventPortalCopy = {
-  portalTitle: 'GDG Manila Event Portal',
-}
-
 export const eventViewsCopy = {
   [VIEW_STATES.WAITING]: {
     badge: 'Waiting Room',

@@ -1,16 +1,23 @@
 import { useEffect, useReducer } from 'react'
 import { createAsyncState, asyncReducer } from '@/lib/asyncState'
-import { programCopy } from '../copy/programCopy'
 import { eventPortalMeta } from '../data/portalMeta'
-import { programSessions } from '../data/programSessions'
+import {
+  buildProgramEventMeta,
+  getDefaultProgramState,
+  programService,
+} from '@/services/program'
 
-const initialData = {
-  eventMeta: {
-    ...eventPortalMeta,
-    ...programCopy,
-  },
-  sessions: [],
+function toProgramViewModel(programState) {
+  return {
+    eventMeta: {
+      ...eventPortalMeta,
+      ...buildProgramEventMeta(programState.eventDraft),
+    },
+    sessions: programState.sessions,
+  }
 }
+
+const initialData = toProgramViewModel(getDefaultProgramState())
 
 export function useProgramViewModel() {
   const [state, dispatch] = useReducer(asyncReducer, createAsyncState(initialData))
@@ -22,10 +29,7 @@ export function useProgramViewModel() {
       dispatch({ type: 'FETCH_START' })
 
       try {
-        const payload = await Promise.resolve({
-          eventMeta: initialData.eventMeta,
-          sessions: programSessions,
-        })
+        const payload = toProgramViewModel(await programService.get())
 
         if (!isCancelled) {
           dispatch({ type: 'FETCH_SUCCESS', payload })
@@ -39,8 +43,15 @@ export function useProgramViewModel() {
 
     loadProgram()
 
+    const unsubscribe = programService.subscribe((nextProgramState) => {
+      if (!isCancelled) {
+        dispatch({ type: 'FETCH_SUCCESS', payload: toProgramViewModel(nextProgramState) })
+      }
+    })
+
     return () => {
       isCancelled = true
+      unsubscribe()
     }
   }, [])
 

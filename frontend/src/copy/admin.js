@@ -1,39 +1,32 @@
 import { VIEW_STATES } from '@/core/constants'
 
 export const adminOverviewLabels = {
-  aboutTitle: 'About',
-  editEventLabel: 'Edit event',
   tabsAriaLabel: 'Admin sections',
   overviewTabLabel: 'Overview',
   programTabLabel: 'Program',
-  alertsTabLabel: 'Alerts',
-  insightsTabLabel: 'Insights',
-  insightsEyebrow: 'Insights',
-  insightsTitle: 'Event insights',
-  insightsDescription: 'Analytics and attendee trends will appear here.',
-  controlsEyebrow: 'Stream Controls',
-  controlsTitle: 'Update attendee state',
-  alertsEyebrow: 'Alerts',
-  alertsTitle: 'Status',
+  streamTabLabel: 'Stream',
+  alertsTabLabel: 'Alert',
+  eventDetailTitle: 'Event Detail',
+  controlsTitle: 'Stream',
+  alertsTitle: 'Alerts',
+  eventMetaDescription:
+    'Update the event headline, hero image, description, location, and date.',
 }
 
 export const adminActionsCopy = [
   {
     view: VIEW_STATES.WAITING,
-    label: 'Waiting Room',
-    description: 'Set pre-show state',
+    label: 'Waiting',
     tone: 'amber',
   },
   {
     view: VIEW_STATES.LIVE,
-    label: 'Live Event',
-    description: 'Start main stage',
+    label: 'Live',
     tone: 'emerald',
   },
   {
     view: VIEW_STATES.ENDED,
-    label: 'Ended',
-    description: 'Close the event',
+    label: 'End',
     tone: 'rose',
   },
 ]

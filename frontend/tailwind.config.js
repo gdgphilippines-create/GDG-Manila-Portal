@@ -15,6 +15,8 @@ export default {
       },
       fontSize: typography.scale,
       borderRadius: {
+        field: layout.radius.field,
+        panel: layout.radius.panel,
         pill: layout.radius.pill,
         card: layout.radius.card,
         dialog: layout.radius.dialog,

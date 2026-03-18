@@ -1,36 +1,27 @@
 import { LuCalendarDays, LuMapPin } from 'react-icons/lu'
-import TagBadge from '../shared/TagBadge'
 
-export default function EventSidebar({ dateRange, location, tags = [], themesHeading = 'Key Themes' }) {
+export default function EventSidebar({ dateRange, location }) {
   return (
-    <aside className="space-y-8 lg:col-span-4" data-purpose="event-sidebar">
-      <div className="space-y-4 border-l border-divider pl-6 text-sm text-muted">
-        {location ? (
-          <div className="flex items-start gap-3">
-            <LuMapPin aria-hidden="true" className="mt-0.5 h-5 w-5 text-muted" />
-            <span>{location}</span>
-          </div>
-        ) : null}
-        {dateRange ? (
-          <div className="flex items-start gap-3">
-            <LuCalendarDays aria-hidden="true" className="mt-0.5 h-5 w-5 text-muted" />
-            <span>{dateRange}</span>
-          </div>
-        ) : null}
-      </div>
-
-      {tags.length > 0 ? (
-        <div className="pl-6">
-          <h4 className="font-label text-xs font-bold uppercase tracking-[0.18em] text-heading">
-            {themesHeading}
-          </h4>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <TagBadge key={tag.id ?? tag.label} label={tag.label} tone={tag.tone} />
-            ))}
-          </div>
+    <aside className="lg:col-span-4" data-purpose="event-sidebar">
+      <div className="border-t border-divider pt-6 lg:border-t-0 lg:border-l lg:pl-6 lg:pt-0">
+        <p className="font-label text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+          Event Details
+        </p>
+        <div className="mt-4 space-y-3">
+          {location ? (
+            <div className="flex items-start gap-3">
+              <LuMapPin aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-muted" />
+              <span className="text-sm leading-6 text-body">{location}</span>
+            </div>
+          ) : null}
+          {dateRange ? (
+            <div className="flex items-start gap-3">
+              <LuCalendarDays aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-muted" />
+              <span className="text-sm leading-6 text-body">{dateRange}</span>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </aside>
   )
 }

@@ -1,8 +1,5 @@
 import { VIEW_STATES } from '@/core/constants'
-import GlassPanel from '@/components/ui/GlassPanel'
-import GoogleDots from '@/components/ui/GoogleDots'
-import SectionHeader from '@/components/ui/SectionHeader'
-import StatusBadge from '@/components/ui/StatusBadge'
+import { GlassPanel, GoogleDots, SectionHeader, StatusBadge } from '@/components/ui'
 import { eventViewsCopy } from '@/copy/event'
 
 export default function StatusCard({ activeView, error }) {

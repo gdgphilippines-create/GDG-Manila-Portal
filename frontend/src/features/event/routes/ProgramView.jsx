@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import PageShell from '@/components/layout/PageShell'
+import { PageShell } from '@/components/layout'
 import { HeroBanner } from '@/components/ui'
 import SessionTimeline from '../components/agenda/SessionTimeline'
+import AlertBanner from '../components/overview/AlertBanner'
 import EventHeader from '../components/overview/EventHeader'
 import EventSidebar from '../components/overview/EventSidebar'
+import { sortSessions } from '@/lib/programSessionUtils'
 import { useProgramViewModel } from '../hooks/useProgramViewModel'
 
 function getDateRange(groups) {
@@ -20,7 +22,7 @@ function getDateRange(groups) {
 
 function groupSessionsByDay(sessions) {
   return Object.values(
-    sessions.reduce((groups, session) => {
+    sortSessions(sessions).reduce((groups, session) => {
       const groupId = `${session.schedule.dateLabel}-${session.schedule.dayLabel}`
 
       if (!groups[groupId]) {
@@ -39,7 +41,7 @@ function groupSessionsByDay(sessions) {
   )
 }
 
-function ProgramContent({ eventMeta, isAdmin = false, sessions }) {
+function ProgramContent({ eventMeta, sessions }) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const [resourceNotice, setResourceNotice] = useState(null)
   const sessionGroups = groupSessionsByDay(sessions)
@@ -61,38 +63,43 @@ function ProgramContent({ eventMeta, isAdmin = false, sessions }) {
   }
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-8 md:py-12">
-      <HeroBanner
-        altText={eventMeta.heroImageAlt}
-        imageUrl={eventMeta.heroImageUrl}
-      />
+    <section className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10">
+      <AlertBanner />
 
-      <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-12">
-        <EventHeader
-          description={isDescriptionExpanded ? eventMeta.fullDescription : eventMeta.description}
-          onReadMore={handleReadMore}
-          readMoreLabel={
-            isDescriptionExpanded
-              ? eventMeta.readLessDescriptionLabel
-              : eventMeta.readFullDescriptionLabel
-          }
-          title={eventMeta.title}
+      <div className="overflow-hidden rounded-card border border-divider bg-card shadow-sm">
+        <HeroBanner
+          altText={eventMeta.heroImageAlt}
+          framed={false}
+          imageUrl={eventMeta.heroImageUrl}
         />
-        <EventSidebar
-          dateRange={getDateRange(sessionGroups)}
-          location={eventMeta.eventDetails?.venue}
-          tags={eventMeta.themes}
-          themesHeading={eventMeta.themesHeading}
-        />
+
+        <div className="px-6 py-6 md:px-8 md:py-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+            <EventHeader
+              description={isDescriptionExpanded ? eventMeta.fullDescription : eventMeta.description}
+              onReadMore={handleReadMore}
+              readMoreLabel={
+                isDescriptionExpanded
+                  ? eventMeta.readLessDescriptionLabel
+                  : eventMeta.readFullDescriptionLabel
+              }
+              title={eventMeta.title}
+            />
+            <EventSidebar
+              dateRange={getDateRange(sessionGroups)}
+              location={eventMeta.eventDetails?.venue}
+            />
+          </div>
+        </div>
       </div>
 
       {resourceNotice ? (
-        <p className="mt-8 rounded-2xl border border-divider bg-card px-4 py-3 text-sm text-muted" role="status">
+        <p className="mt-8 rounded-2xl border border-divider bg-card px-4 py-3 text-sm text-body" role="status">
           {resourceNotice}
         </p>
       ) : null}
 
-      <SessionTimeline groups={sessionGroups} isAdmin={isAdmin} onAction={handleSessionAction} />
+      <SessionTimeline groups={sessionGroups} onAction={handleSessionAction} />
     </section>
   )
 }
@@ -109,11 +116,24 @@ function ProgramState({ children, status }) {
   return children
 }
 
-export default function ProgramView({ isAdmin = false, withPageShell = true }) {
+export default function ProgramView({ eventMetaOverride, sessionsOverride, withPageShell = true }) {
   const { eventMeta, sessions, status } = useProgramViewModel()
+  const resolvedEventMeta = eventMetaOverride
+    ? {
+        ...eventMeta,
+        ...eventMetaOverride,
+        eventDetails: {
+          ...eventMeta.eventDetails,
+          ...eventMetaOverride.eventDetails,
+        },
+      }
+    : eventMeta
+  const resolvedSessions = sessionsOverride ?? sessions
+  const resolvedStatus =
+    eventMetaOverride || sessionsOverride ? 'success' : status
   const content = (
-    <ProgramState status={status}>
-      <ProgramContent eventMeta={eventMeta} isAdmin={isAdmin} sessions={sessions} />
+    <ProgramState status={resolvedStatus}>
+      <ProgramContent eventMeta={resolvedEventMeta} sessions={resolvedSessions} />
     </ProgramState>
   )
 
@@ -121,5 +141,5 @@ export default function ProgramView({ isAdmin = false, withPageShell = true }) {
     return content
   }
 
-  return <PageShell>{content}</PageShell>
+  return <PageShell navbarContentClassName="max-w-5xl">{content}</PageShell>
 }

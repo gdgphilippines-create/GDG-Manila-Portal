@@ -1,5 +1,7 @@
 export const layout = {
   radius: {
+    field: '16px',
+    panel: '20px',
     pill: '32px',
     card: '32px',
     dialog: '24px',

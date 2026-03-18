@@ -1,5 +1,5 @@
 import { useReducer } from 'react'
-import { executeAction } from '@/api/admin'
+import { executeAction } from '@/services/view-sync/actions'
 import { createAsyncState, asyncReducer } from '@/lib/asyncState'
 import { useActiveView } from '@/services/view-sync/useActiveView'
 

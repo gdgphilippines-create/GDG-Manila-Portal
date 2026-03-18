@@ -1,4 +1,4 @@
-import PageShell from '@/components/layout/PageShell'
+import { PageShell } from '@/components/layout'
 import { EventSection } from '@/features/event'
 
 export default function UserView() {

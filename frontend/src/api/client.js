@@ -57,7 +57,9 @@ export async function apiRequest(path, options = {}) {
 
   if (!response.ok) {
     const message =
-      typeof payload === 'object' && payload !== null ? payload.message : 'Request failed'
+      typeof payload === 'object' && payload !== null
+        ? payload.message || payload.error || 'Request failed'
+        : 'Request failed'
 
     if (response.status === 401) {
       throw new AuthError(message, { status: response.status })

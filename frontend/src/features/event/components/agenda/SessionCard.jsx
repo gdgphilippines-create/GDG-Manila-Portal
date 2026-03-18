@@ -1,35 +1,25 @@
 import {
-  LuArrowDown,
-  LuArrowUp,
-  LuBot,
   LuCirclePlay,
   LuEye,
-  LuGripVertical,
   LuMapPin,
-  LuPencilLine,
   LuUserRound,
 } from 'react-icons/lu'
-import { programCopy } from '../../copy/programCopy'
-
-function RobotIllustration() {
-  return (
-    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-footer md:h-28 md:w-28">
-      <LuBot aria-hidden="true" className="h-12 w-12 text-muted/40" strokeWidth={1.75} />
-    </div>
-  )
-}
+import { programCopy } from '@/copy/program'
+import { getSessionTypeLabel, normalizeSession } from '@/lib/programSessionUtils'
 
 function SessionActionButton({ action, label, onAction }) {
   const isPrimary = action.variant === 'primary'
+  const isSlidesAction = action.labelKey === 'slides'
   const Icon = action.icon === 'eye' ? LuEye : LuCirclePlay
+  const className = isPrimary
+    ? 'inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-card transition hover:brightness-95'
+    : isSlidesAction
+      ? 'inline-flex items-center gap-2 rounded-full bg-primary/10 px-6 py-2.5 text-xs font-bold text-primary transition hover:bg-primary/15'
+      : 'inline-flex items-center gap-2 rounded-full bg-footer px-6 py-2.5 text-xs font-bold text-muted transition hover:bg-slate-200'
 
   return (
     <button
-      className={
-        isPrimary
-          ? 'inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-xs font-bold text-card transition hover:brightness-95'
-          : 'inline-flex items-center gap-2 rounded-lg border border-divider px-6 py-2.5 text-xs font-bold text-muted transition hover:bg-footer'
-      }
+      className={className}
       onClick={() => onAction?.(action, label)}
       type="button"
     >
@@ -42,7 +32,7 @@ function SessionActionButton({ action, label, onAction }) {
 function BreakActionButton({ action, label, onAction }) {
   return (
     <button
-      className="inline-flex rounded-lg border border-warning/30 bg-warning px-8 py-2.5 text-xs font-bold text-card transition hover:bg-warning/90"
+      className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-card transition hover:brightness-95"
       onClick={() => onAction?.(action, label)}
       type="button"
     >
@@ -51,57 +41,23 @@ function BreakActionButton({ action, label, onAction }) {
   )
 }
 
-function AdminControls() {
-  return (
-    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-divider bg-footer px-4 py-3">
-      <div className="inline-flex items-center gap-2 text-sm text-muted">
-        <LuGripVertical aria-hidden="true" className="h-4 w-4" />
-        <span>Admin controls</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <button
-          className="inline-flex items-center gap-2 rounded-lg border border-divider bg-card px-3 py-2 text-xs font-semibold text-muted"
-          disabled
-          type="button"
-        >
-          <LuPencilLine aria-hidden="true" className="h-4 w-4" />
-          <span>Edit</span>
-        </button>
-        <button
-          className="inline-flex items-center gap-2 rounded-lg border border-divider bg-card px-3 py-2 text-xs font-semibold text-muted"
-          disabled
-          type="button"
-        >
-          <LuArrowUp aria-hidden="true" className="h-4 w-4" />
-          <span>Move up</span>
-        </button>
-        <button
-          className="inline-flex items-center gap-2 rounded-lg border border-divider bg-card px-3 py-2 text-xs font-semibold text-muted"
-          disabled
-          type="button"
-        >
-          <LuArrowDown aria-hidden="true" className="h-4 w-4" />
-          <span>Move down</span>
-        </button>
-      </div>
-    </div>
-  )
-}
+export default function SessionCard({ onAction, session }) {
+  const normalizedSession = normalizeSession(session)
+  const timeLabel = `${normalizedSession.schedule.startTime} - ${normalizedSession.schedule.endTime}`
 
-export default function SessionCard({ isAdmin = false, onAction, session }) {
-  const timeLabel = `${session.schedule.startTime} - ${session.schedule.endTime}`
-
-  if (session.type === 'break') {
-    const action = session.actions?.[0]
+  if (normalizedSession.type === 'break') {
+    const action = normalizedSession.actions?.[0]
     const label = action ? programCopy.actionLabels[action.labelKey] : null
 
     return (
       <article className="rounded-[28px] border border-dashed border-warning/30 bg-warning-bg/90 p-8">
-        {isAdmin ? <AdminControls /> : null}
         <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-warning">
           {timeLabel}
         </span>
-        <h3 className="mt-2 text-2xl font-bold text-heading">{session.title}</h3>
+        <h3 className="mt-2 text-2xl font-bold text-heading">{normalizedSession.title}</h3>
+        {normalizedSession.description ? (
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-body">{normalizedSession.description}</p>
+        ) : null}
         {action && label ? (
           <div className="mt-6">
             <BreakActionButton action={action} label={label} onAction={onAction} />
@@ -112,49 +68,57 @@ export default function SessionCard({ isAdmin = false, onAction, session }) {
   }
 
   return (
-    <article className="flex flex-col justify-between rounded-[28px] border border-divider bg-card p-8 shadow-sm transition-shadow hover:shadow-md md:flex-row">
-      <div className="flex-1">
-        {isAdmin ? <AdminControls /> : null}
-        <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-          {timeLabel}
+    <article className="rounded-[28px] border border-divider bg-card p-8">
+      <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+        {timeLabel}
+      </span>
+      <h3 className="mt-2 text-2xl font-bold text-heading">{normalizedSession.title}</h3>
+
+      <div className="mt-2.5 flex flex-wrap items-center gap-2">
+        <span className="rounded-full bg-footer px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] text-heading">
+          {getSessionTypeLabel(normalizedSession)}
         </span>
-        <h3 className="mt-2 text-2xl font-bold text-heading">{session.title}</h3>
+      </div>
 
-        <div className="mb-8 mt-4 space-y-3">
-          {session.speakerName ? (
-            <div className="flex items-center gap-2 text-sm text-body">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-success-bg">
-                <LuUserRound aria-hidden="true" className="h-4 w-4 text-success" />
-              </div>
-              <span>{session.speakerName}</span>
+      <div className="mb-6 mt-3 space-y-2.5">
+        {normalizedSession.speakerName ? (
+          <div className="flex items-center gap-2 text-sm leading-5 text-body">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success-bg">
+              <LuUserRound aria-hidden="true" className="h-4 w-4 text-success" />
             </div>
-          ) : null}
+            <span>
+              {normalizedSession.speakerName}
+              {normalizedSession.speakerRole ? ` · ${normalizedSession.speakerRole}` : ''}
+            </span>
+          </div>
+        ) : null}
 
-          {session.venue ? (
-            <div className="flex items-center gap-2 text-sm text-muted">
-              <LuMapPin aria-hidden="true" className="h-4 w-4" />
-              <span>{session.venue}</span>
-            </div>
-          ) : null}
-        </div>
+        {normalizedSession.description ? (
+          <p className="max-w-2xl text-sm leading-6 text-body">
+            {normalizedSession.description}
+          </p>
+        ) : null}
 
-        {session.actions?.length ? (
-          <div className="flex flex-wrap gap-4">
-            {session.actions.map((action) => (
-              <SessionActionButton
-                action={action}
-                key={action.id}
-                label={programCopy.actionLabels[action.labelKey]}
-                onAction={onAction}
-              />
-            ))}
+        {normalizedSession.venue ? (
+          <div className="flex items-center gap-2 text-sm leading-5 text-muted">
+            <LuMapPin aria-hidden="true" className="h-4 w-4" />
+            <span>{normalizedSession.venue}</span>
           </div>
         ) : null}
       </div>
 
-      <div className="mt-8 flex items-center justify-center md:ml-8 md:mt-0">
-        {session.illustration === 'robot' ? <RobotIllustration /> : null}
-      </div>
+      {normalizedSession.actions?.length ? (
+        <div className="flex flex-wrap gap-4">
+          {normalizedSession.actions.map((action) => (
+            <SessionActionButton
+              action={action}
+              key={action.id}
+              label={programCopy.actionLabels[action.labelKey]}
+              onAction={onAction}
+            />
+          ))}
+        </div>
+      ) : null}
     </article>
   )
 }

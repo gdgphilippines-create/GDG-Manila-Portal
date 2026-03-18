@@ -13,14 +13,6 @@ export const programCopy = {
   eventDetails: {
     venue: 'Accenture People Hub',
   },
-  themesHeading: 'Key Themes',
-  themes: [
-    { id: 'generative-ai', label: 'Generative AI', tone: 'generative-ai' },
-    { id: 'cloud-native', label: 'Cloud Native', tone: 'cloud-native' },
-    { id: 'flutter', label: 'Flutter', tone: 'flutter' },
-    { id: 'web-perf', label: 'Web Perf', tone: 'web-perf' },
-    { id: 'firebase', label: 'Firebase', tone: 'firebase' },
-  ],
   actionLabels: {
     startCodelab: 'START CODELAB',
     slides: 'SLIDES',
