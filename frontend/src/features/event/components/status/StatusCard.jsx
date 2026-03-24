@@ -1,6 +1,6 @@
-import { VIEW_STATES } from '@/core/constants'
+import { VIEW_STATES } from '@/constants'
 import { GlassPanel, GoogleDots, SectionHeader, StatusBadge } from '@/components/ui'
-import { eventViewsCopy } from '@/copy/event'
+import { eventViewsCopy } from '@/constants/event'
 
 export default function StatusCard({ activeView, error }) {
   const content = eventViewsCopy[activeView] ?? eventViewsCopy[VIEW_STATES.LOADING]

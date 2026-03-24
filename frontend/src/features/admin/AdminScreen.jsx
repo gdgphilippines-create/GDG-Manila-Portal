@@ -5,7 +5,7 @@ import { DEFAULT_ADMIN_TAB } from './constants'
 import {
   adminOverviewLabels,
   getAdminStatusPill,
-} from '@/copy/admin'
+} from '@/constants/admin'
 import { useAdminViewModel } from './hooks/useAdminViewModel'
 import { getDefaultProgramState, programService } from '@/services/program'
 

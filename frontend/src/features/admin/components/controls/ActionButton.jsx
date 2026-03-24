@@ -1,5 +1,5 @@
 import { LuCircleOff, LuClock3, LuRadio } from 'react-icons/lu'
-import { VIEW_STATES } from '@/core/constants'
+import { VIEW_STATES } from '@/constants'
 
 const actionIcons = {
   [VIEW_STATES.WAITING]: LuClock3,

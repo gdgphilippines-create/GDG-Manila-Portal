@@ -1,5 +1,5 @@
-import { getSchedule, updateSession } from '@/api/schedule'
-import { programCopy } from '@/copy/program'
+import { getSchedule, updateSession } from '@/services/api/schedule'
+import { programCopy } from '@/constants/program'
 import { createPollingSubscription } from '@/lib/createPollingSubscription'
 import { emit, EVENT_BUS_EVENTS } from '@/lib/eventBus'
 import { programSessions as initialSessions } from '@/lib/programSessionData'

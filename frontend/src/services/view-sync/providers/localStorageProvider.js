@@ -1,4 +1,4 @@
-import { VIEW_STATES, normalizeView } from '@/core/constants'
+import { VIEW_STATES, normalizeView } from '@/constants'
 import { emit, EVENT_BUS_EVENTS, on } from '@/lib/eventBus'
 
 const VIEW_STATE_KEY = 'gdg-manila-active-view'

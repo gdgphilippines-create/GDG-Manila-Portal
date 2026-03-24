@@ -4,7 +4,7 @@ import {
   LuMapPin,
   LuUserRound,
 } from 'react-icons/lu'
-import { programCopy } from '@/copy/program'
+import { programCopy } from '@/constants/program'
 import { getSessionTypeLabel, normalizeSession } from '@/lib/programSessionUtils'
 
 function SessionActionButton({ action, label, onAction }) {

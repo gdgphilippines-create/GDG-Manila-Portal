@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
+  getCurrentUser,
   persistVerifiedUser,
   logout as logoutRequest,
   verifyUser,
-} from '@/api/auth'
-import { ROLES } from '@/core/constants/roles'
+} from '@/services/api/auth'
+import { ROLES } from '@/constants/roles'
 import { AuthContext } from './authContext'
 
 export function AuthProvider({ children }) {
@@ -16,18 +17,21 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let mounted = true
 
-    async function resetSession() {
+    async function initializeSession() {
       try {
-        await logoutRequest()
+        const currentUser = await getCurrentUser()
+
+        if (mounted) {
+          setUser(currentUser)
+        }
       } finally {
         if (mounted) {
-          setUser(null)
           setLoading(false)
         }
       }
     }
 
-    resetSession()
+    initializeSession()
 
     return () => {
       mounted = false

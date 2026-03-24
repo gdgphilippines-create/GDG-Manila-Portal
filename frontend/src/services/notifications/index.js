@@ -1,4 +1,4 @@
-import { getAlerts, postAlert } from '@/api/alerts'
+import { getAlerts, postAlert } from '@/services/api/alerts'
 import { createPollingSubscription } from '@/lib/createPollingSubscription'
 import { config } from '@/lib/config'
 import { emit, EVENT_BUS_EVENTS } from '@/lib/eventBus'

@@ -1,44 +1,8 @@
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom'
-import { ROLES } from '@/core/constants/roles'
-import { AdminAlertsRoute, AdminStreamRoute, ProgramManageView } from '@/features/admin'
-import ProtectedRoute from '@/components/guards/ProtectedRoute'
-import { useAuth } from './hooks'
-import { AuthProvider } from './providers'
-import { publicRoutes } from './routes/publicRoutes'
-import AdminOverviewView from '@/views/admin/AdminOverviewView'
-import AdminView from '@/views/admin/AdminView'
-
-const appRoutes = [
-  ...publicRoutes,
-  {
-    path: '/admin-panel',
-    isProtected: true,
-    allowedRoles: [ROLES.ADMIN],
-    element: <AdminView />,
-    children: [
-      {
-        index: true,
-        element: <Navigate replace to="overview" />,
-      },
-      {
-        path: 'overview',
-        element: <AdminOverviewView />,
-      },
-      {
-        path: 'program',
-        element: <ProgramManageView />,
-      },
-      {
-        path: 'stream',
-        element: <AdminStreamRoute />,
-      },
-      {
-        path: 'alerts',
-        element: <AdminAlertsRoute />,
-      },
-    ],
-  },
-]
+import { ProtectedRoute } from '@/components/layout'
+import { useAuth } from '@/app/hooks'
+import { AuthProvider } from '@/app/providers'
+import { routes } from './routes'
 
 function getRouteElement(route) {
   const { allowedRoles, element, isProtected } = route
@@ -66,8 +30,8 @@ function renderRoute(route, key) {
   )
 }
 
-function renderRoutes(routes) {
-  return routes.map((route, index) => renderRoute(route, route.path ?? `route-${index}`))
+function renderRoutes(routeList) {
+  return routeList.map((route, index) => renderRoute(route, route.path ?? `route-${index}`))
 }
 
 function AuthGate({ children }) {
@@ -94,7 +58,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <AuthGate>
-          <Routes>{renderRoutes(appRoutes)}</Routes>
+          <Routes>{renderRoutes(routes)}</Routes>
         </AuthGate>
       </AuthProvider>
     </BrowserRouter>

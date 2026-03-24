@@ -1,6 +1,6 @@
 import { Popover } from '@/components/ui'
 import { useAuth } from '@/app/hooks/useAuth'
-import { navbarCopy } from '@/copy/common'
+import { navbarCopy } from '@/constants/common'
 import gdgLogo from '@/assets/BWAI-26-main-Logo-lockups-horizontal.png'
 import { LuMenu } from 'react-icons/lu'
 

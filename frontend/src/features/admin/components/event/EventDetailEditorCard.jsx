@@ -1,6 +1,6 @@
 import { GlassPanel, FormField, IconInput, SectionCard, TextInput, Textarea } from '@/components/ui'
 import { LuCalendarDays, LuImage, LuMapPin } from 'react-icons/lu'
-import { adminOverviewLabels } from '@/copy/admin'
+import { adminOverviewLabels } from '@/constants/admin'
 import { surfacePatterns } from '@/styles/layout'
 
 function formatDateForInput(value) {

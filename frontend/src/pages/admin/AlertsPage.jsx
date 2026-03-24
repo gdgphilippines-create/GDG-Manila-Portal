@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { LuBell, LuCheck, LuChevronDown, LuMessageSquare } from 'react-icons/lu'
 import { GlassPanel, Popover } from '@/components/ui'
-import { adminOverviewLabels } from '@/copy/admin'
+import { adminOverviewLabels } from '@/constants/admin'
 import { notificationsService } from '@/services/notifications'
 
 const alertTones = [
@@ -73,7 +73,7 @@ function TypePicker({ type, onSelect }) {
   )
 }
 
-export default function AdminAlertsRoute() {
+export default function AlertsPage() {
   const { authEmail } = useOutletContext() ?? {}
   const [currentAlert, setCurrentAlert] = useState({ active: false })
   const [message, setMessage] = useState('')

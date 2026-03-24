@@ -1,12 +1,9 @@
 import { useState } from 'react'
 import { PageShell } from '@/components/layout'
 import { HeroBanner } from '@/components/ui'
-import SessionTimeline from '../components/agenda/SessionTimeline'
-import AlertBanner from '../components/overview/AlertBanner'
-import EventHeader from '../components/overview/EventHeader'
-import EventSidebar from '../components/overview/EventSidebar'
+import { SessionTimeline, AlertBanner, EventHeader, EventSidebar } from '@/features/event'
+import { useProgramViewModel } from '@/features/event/hooks/useProgramViewModel'
 import { sortSessions } from '@/lib/programSessionUtils'
-import { useProgramViewModel } from '../hooks/useProgramViewModel'
 
 function getDateRange(groups) {
   if (groups.length === 0) {
@@ -116,7 +113,7 @@ function ProgramState({ children, status }) {
   return children
 }
 
-export default function ProgramView({ eventMetaOverride, sessionsOverride, withPageShell = true }) {
+export default function ProgramPage({ eventMetaOverride, sessionsOverride, withPageShell = true }) {
   const { eventMeta, sessions, status } = useProgramViewModel()
   const resolvedEventMeta = eventMetaOverride
     ? {

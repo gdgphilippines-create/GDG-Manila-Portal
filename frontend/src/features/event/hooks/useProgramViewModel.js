@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react'
 import { createAsyncState, asyncReducer } from '@/lib/asyncState'
-import { eventPortalMeta } from '../data/portalMeta'
+import { eventPortalMeta } from '@/constants/portal-meta'
 import {
   buildProgramEventMeta,
   getDefaultProgramState,

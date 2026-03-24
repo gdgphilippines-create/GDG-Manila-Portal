@@ -1,5 +1,5 @@
 import { config } from '@/lib/config'
-import { ROLES } from '@/core/constants/roles'
+import { ROLES } from '@/constants/roles'
 import { apiRequest, setStoredToken } from './client'
 
 const AUTH_STORAGE_KEY = 'gdg-manila-auth-user'

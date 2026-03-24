@@ -1,4 +1,4 @@
-import { VIEW_STATES } from '@/core/constants'
+import { VIEW_STATES } from '@/constants'
 
 export const eventViewsCopy = {
   [VIEW_STATES.WAITING]: {

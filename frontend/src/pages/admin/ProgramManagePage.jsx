@@ -3,17 +3,17 @@ import { LuPencil, LuPlus } from 'react-icons/lu'
 import { GlassPanel } from '@/components/ui'
 import { surfacePatterns } from '@/styles/layout'
 import { useOutletContext } from 'react-router-dom'
-import EventDetailEditorCard from '../components/event/EventDetailEditorCard'
-import SessionForm from '../components/program/SessionForm'
+import EventDetailEditorCard from '@/features/admin/components/event/EventDetailEditorCard'
+import SessionForm from '@/features/admin/components/program/SessionForm'
 import {
   emptySession,
   getSessionTypeLabel,
   normalizeSession,
   sortSessions,
   summarizeSession,
-} from '../components/program/sessionFormUtils'
+} from '@/features/admin/components/program/sessionFormUtils'
 
-export default function ProgramManageView() {
+export default function ProgramManagePage() {
   const {
     eventDraft,
     programError,

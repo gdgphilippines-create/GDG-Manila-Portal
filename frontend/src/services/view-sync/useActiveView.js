@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import { VIEW_STATES } from '@/core/constants'
+import { VIEW_STATES } from '@/constants'
 import { createAsyncState, asyncReducer } from '@/lib/asyncState'
 import { getActiveViewState, subscribeToView } from './views'
 

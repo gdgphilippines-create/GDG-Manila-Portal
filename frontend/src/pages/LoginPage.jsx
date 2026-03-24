@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { LuMail } from 'react-icons/lu'
 import { useAuth } from '@/app/hooks'
-import PageShell from '@/components/layout/PageShell'
+import { PageShell } from '@/components/layout'
 import { GlassPanel, IconInput } from '@/components/ui'
 
-export default function LoginView() {
+export default function LoginPage() {
   const { loading, login } = useAuth()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')

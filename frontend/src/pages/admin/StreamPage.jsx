@@ -1,9 +1,9 @@
 import { GlassPanel } from '@/components/ui'
-import { adminActionsCopy, adminOverviewLabels } from '@/copy/admin'
-import ActionGrid from '../components/controls/ActionGrid'
+import { adminActionsCopy, adminOverviewLabels } from '@/constants/admin'
+import ActionGrid from '@/features/admin/components/controls/ActionGrid'
 import { useOutletContext } from 'react-router-dom'
 
-export default function AdminStreamRoute() {
+export default function StreamPage() {
   const { currentView, error, isPending, updateView } = useOutletContext()
 
   return (

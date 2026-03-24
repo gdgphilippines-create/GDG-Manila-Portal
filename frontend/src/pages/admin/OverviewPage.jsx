@@ -1,7 +1,7 @@
 import { useOutletContext } from 'react-router-dom'
-import ProgramPage from '@/views/program/ProgramPage'
+import ProgramPage from '@/pages/ProgramPage'
 
-export default function AdminOverviewView() {
+export default function OverviewPage() {
   const { eventDraft, sessions } = useOutletContext()
 
   return (
