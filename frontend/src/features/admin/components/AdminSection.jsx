@@ -30,7 +30,7 @@ export default function AdminSection({
     <ViewFrame>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-6">
         <div className="flex flex-wrap items-center gap-4">
-          <h1 className="text-type-heading-sm tracking-tight text-heading">
+          <h1 className="text-type-heading tracking-tight text-heading">
             {event.eventName}
           </h1>
           <span

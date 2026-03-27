@@ -128,7 +128,7 @@ export default function AlertsPage() {
     setError('')
 
     try {
-      await notificationsService.broadcastAlert(authEmail, '', currentAlert.type || 'info')
+      await notificationsService.clearBroadcast(authEmail, currentAlert.type || 'info')
     } catch (submitError) {
       setError(submitError?.message || 'Unable to clear alert')
     } finally {

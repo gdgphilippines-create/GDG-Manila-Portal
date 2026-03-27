@@ -1,4 +1,4 @@
-import { getAlerts, postAlert } from '@/services/api/alerts'
+import { getAlerts, postAlert, clearAlert } from '@/services/api/alerts'
 import { createPollingSubscription } from '@/lib/createPollingSubscription'
 import { config } from '@/lib/config'
 import { emit, EVENT_BUS_EVENTS } from '@/lib/eventBus'
@@ -63,6 +63,18 @@ export const notificationsService = {
     const savedAlert = normalizeAlert(await postAlert(normalizedEmail, message, type))
     emit(EVENT_BUS_EVENTS.ALERTS_CHANGED, savedAlert)
     return savedAlert
+  },
+
+  async clearBroadcast(email, type = 'info') {
+    const normalizedEmail = String(email || '').trim().toLowerCase()
+
+    if (!normalizedEmail) {
+      throw new Error('Login required to clear an alert.')
+    }
+
+    const cleared = normalizeAlert(await clearAlert(normalizedEmail, type))
+    emit(EVENT_BUS_EVENTS.ALERTS_CHANGED, cleared)
+    return cleared
   },
 
   notify(message, options = {}) {

@@ -91,3 +91,33 @@ export async function postAlert(email, message, type = 'info') {
     body: JSON.stringify(payload),
   })
 }
+
+/**
+ * Clears the currently active alert.
+ *
+ * Sends a POST with an empty message. The backend treats an empty message
+ * as a deactivation signal (`active` becomes false). If the backend does
+ * not support this convention, a dedicated DELETE /api/alerts endpoint
+ * should be added on the middleware side.
+ *
+ * @param {string} email - Admin email for authorization.
+ * @param {string} [type] - Preserved from the alert being cleared.
+ * @returns {Promise<{ active: false }>}
+ */
+export async function clearAlert(email, type = 'info') {
+  const resolvedEmail = String(email || '').trim().toLowerCase() || getAuthEmail()
+
+  if (config.enableMockAuth) {
+    writeMockAlert(null)
+    return { active: false }
+  }
+
+  return apiRequest('/alerts', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: resolvedEmail,
+      message: '',
+      type: String(type || 'info').trim() || 'info',
+    }),
+  })
+}

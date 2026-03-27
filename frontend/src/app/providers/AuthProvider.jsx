@@ -9,6 +9,12 @@ import {
 import { ROLES } from '@/constants/roles'
 import { AuthContext } from './authContext'
 
+function getPostLoginRoute(role) {
+  if (role === ROLES.ADMIN) return '/admin-panel'
+  if (role === ROLES.FACILITATOR) return '/facilitator'
+  return '/'
+}
+
 export function AuthProvider({ children }) {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
@@ -52,7 +58,7 @@ export function AuthProvider({ children }) {
       const nextUser = persistVerifiedUser(response.user)
       setUser(nextUser)
 
-      navigate(nextUser?.role === ROLES.ADMIN ? '/admin-panel' : '/', { replace: true })
+      navigate(getPostLoginRoute(nextUser?.role), { replace: true })
 
       return {
         success: true,
@@ -79,6 +85,7 @@ export function AuthProvider({ children }) {
     loading,
     isAuthenticated: Boolean(user),
     isAdmin: user?.role === ROLES.ADMIN,
+    isFacilitator: user?.role === ROLES.FACILITATOR,
     login,
     logout,
   }

@@ -17,7 +17,7 @@ export default function UserPage() {
   }
 
   return (
-    <PageShell>
+    <PageShell mainClassName="pt-0" navbarSpacerClassName="h-[4.5rem]">
       <ProgramPage withPageShell={false} />
     </PageShell>
   )

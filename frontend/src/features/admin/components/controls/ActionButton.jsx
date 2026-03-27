@@ -44,7 +44,7 @@ export default function ActionButton({ action, active = false, disabled, onSelec
         <span className={`inline-flex h-11 w-11 items-center justify-center rounded-full ${iconClassName}`}>
           <Icon aria-hidden="true" className="h-5 w-5" />
         </span>
-        <span className="font-sans text-type-toast leading-5 text-current">
+        <span className="font-sans text-type-caption leading-5 text-current">
           {action.label}
         </span>
       </span>

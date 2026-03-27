@@ -1,6 +1,6 @@
 import { config } from '@/lib/config'
 import { ROLES } from '@/constants/roles'
-import { apiRequest, setStoredToken } from './client'
+import { apiRequest } from './client'
 
 const AUTH_STORAGE_KEY = 'gdg-manila-auth-user'
 const MOCK_AUTH_ERROR_MESSAGE = 'Email not found in registry'
@@ -130,7 +130,6 @@ export async function verifyUser(email) {
 
 export async function logout() {
   writeStoredUser(null)
-  setStoredToken('')
 }
 
 export async function getCurrentUser() {
@@ -145,6 +144,5 @@ export function getAuthEmail() {
 export function persistVerifiedUser(user) {
   const normalizedUser = normalizeUser(user)
   writeStoredUser(normalizedUser)
-  setStoredToken('')
   return normalizedUser
 }

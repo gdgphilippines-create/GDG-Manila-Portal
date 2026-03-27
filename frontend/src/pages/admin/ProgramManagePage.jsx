@@ -231,10 +231,10 @@ export default function ProgramManagePage() {
                             type="button"
                           >
                             <div className="min-w-[112px] shrink-0 pt-0.5">
-                              <p className="text-type-field leading-5 text-body">
+                              <p className="text-type-caption leading-5 text-body">
                                 {session.schedule.startTime}
                               </p>
-                              <p className="text-type-field leading-5 text-body">
+                              <p className="text-type-caption leading-5 text-body">
                                 {session.schedule.endTime}
                               </p>
                             </div>
@@ -244,7 +244,7 @@ export default function ProgramManagePage() {
                                 {session.title || 'Untitled session'}
                               </h3>
                               <span
-                                className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-type-badge uppercase tracking-label-narrow ${sessionTypeTone.badge}`.trim()}
+                                className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-type-caption uppercase tracking-label-narrow ${sessionTypeTone.badge}`.trim()}
                               >
                                 {getSessionTypeLabel(session)}
                               </span>

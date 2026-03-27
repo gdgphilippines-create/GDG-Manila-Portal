@@ -1,39 +1,11 @@
 import { config } from '@/lib/config'
 import { ApiError, AuthError, NetworkError } from '@/lib/errors'
 
-const authTokenStorageKey = 'gdg-manila-auth-token'
-
-function getStoredToken() {
-  if (typeof window === 'undefined') {
-    return ''
-  }
-
-  return window.localStorage.getItem(authTokenStorageKey) || ''
-}
-
-export function setStoredToken(token) {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  if (token) {
-    window.localStorage.setItem(authTokenStorageKey, token)
-    return
-  }
-
-  window.localStorage.removeItem(authTokenStorageKey)
-}
-
 export async function apiRequest(path, options = {}) {
   const url = path.startsWith('http') ? path : `${config.apiBaseUrl}${path}`
   const headers = new Headers(options.headers || {})
-  const token = getStoredToken()
 
   headers.set('Content-Type', 'application/json')
-
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`)
-  }
 
   if (config.isDev) {
     console.info('[api]', options.method || 'GET', url)
@@ -61,7 +33,7 @@ export async function apiRequest(path, options = {}) {
         ? payload.message || payload.error || 'Request failed'
         : 'Request failed'
 
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       throw new AuthError(message, { status: response.status })
     }
 

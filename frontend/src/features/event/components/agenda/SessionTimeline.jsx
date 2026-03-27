@@ -1,4 +1,5 @@
 import SessionCard from './SessionCard'
+import FeedbackCTA from './FeedbackCTA'
 
 function TimelineDot({ type }) {
   const borderColor = type === 'break' ? 'border-warning' : 'border-primary'
@@ -11,9 +12,9 @@ function TimelineDot({ type }) {
   )
 }
 
-export default function SessionTimeline({ groups = [], onAction }) {
+export default function SessionTimeline({ groups = [], onAction, showFeedback = false }) {
   return (
-    <section className="mt-20" data-purpose="agenda-timeline">
+    <section data-purpose="agenda-timeline">
       {groups.map((group) => (
         <div className="mb-14 last:mb-0" key={group.id}>
           <h2 className="mb-12 flex items-center gap-3 font-label text-lg font-bold uppercase tracking-label-extra-wide text-heading">
@@ -39,6 +40,16 @@ export default function SessionTimeline({ groups = [], onAction }) {
           </div>
         </div>
       ))}
+
+      {groups.length > 0 && showFeedback ? (
+        <div className="relative mt-14">
+          <div
+            aria-hidden="true"
+            className="absolute left-[11px] top-0 h-10 w-px border-l-2 border-dashed border-success/40"
+          />
+          <FeedbackCTA />
+        </div>
+      ) : null}
     </section>
   )
 }

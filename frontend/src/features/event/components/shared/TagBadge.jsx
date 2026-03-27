@@ -9,7 +9,7 @@ const toneClassNames = {
 export default function TagBadge({ label, tone = 'generative-ai' }) {
   return (
     <span
-      className={`inline-flex rounded-lg border px-3 py-1 text-type-badge uppercase tracking-label-wide ${toneClassNames[tone] ?? toneClassNames['generative-ai']}`}
+      className={`inline-flex rounded-lg border px-3 py-1 text-type-caption uppercase tracking-label-wide ${toneClassNames[tone] ?? toneClassNames['generative-ai']}`}
     >
       {label}
     </span>

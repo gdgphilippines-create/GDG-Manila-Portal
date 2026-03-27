@@ -100,6 +100,9 @@ export const headerStatusClassNames = {
   },
 }
 
+export const socialLinkChipClassName =
+  'border-[0.5px] border-divider bg-transparent text-body hover:border-divider hover:text-heading'
+
 export function getInteractiveTabClassName(isActive) {
   const activeTabClassName = ''
   const inactiveTabClassName = 'active:translate-y-px'

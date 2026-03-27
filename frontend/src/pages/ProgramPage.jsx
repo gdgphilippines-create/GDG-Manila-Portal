@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { LuChevronDown } from 'react-icons/lu'
 import { PageShell } from '@/components/layout'
 import { HeroBanner } from '@/components/ui'
 import { SessionTimeline, EventHeader, EventSidebar, useProgramViewModel } from '@/features/event'
@@ -41,9 +42,17 @@ function groupSessionsByDay(sessions) {
 function ProgramContent({ eventMeta, sessions }) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   const sessionGroups = groupSessionsByDay(sessions)
+  const scheduleSectionRef = useRef(null)
 
   function handleReadMore() {
     setIsDescriptionExpanded((value) => !value)
+  }
+
+  function handleScrollToSchedule() {
+    scheduleSectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
   }
 
   function handleSessionAction(action, label) {
@@ -88,9 +97,28 @@ function ProgramContent({ eventMeta, sessions }) {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-5xl px-4">
-        <SessionTimeline groups={sessionGroups} onAction={handleSessionAction} />
-      </div>
+      {sessionGroups.length > 0 ? (
+        <section className="mx-auto w-full max-w-5xl px-4 pt-10 md:pt-12">
+          <div className="flex justify-center pt-5 md:pt-6">
+            <button
+              aria-label="Scroll to schedule"
+              className="inline-flex items-center justify-center text-slate-400 transition hover:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+              onClick={handleScrollToSchedule}
+              type="button"
+            >
+              <LuChevronDown aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="pt-14 md:pt-16" ref={scheduleSectionRef}>
+            <SessionTimeline
+              groups={sessionGroups}
+              onAction={handleSessionAction}
+              showFeedback={eventMeta.showFeedback}
+            />
+          </div>
+        </section>
+      ) : null}
     </section>
   )
 }

@@ -43,32 +43,32 @@
 }
 
 @layer components {
-  .type-hero {
-    @apply font-display text-type-hero text-heading;
+  .type-heading {
+    @apply font-display text-type-heading text-heading;
   }
 
-  .type-section-heading {
-    @apply font-sans text-type-section-heading text-heading;
-  }
-
-  .type-nav-brand {
-    @apply font-sans text-type-nav-brand text-heading;
+  .type-subheading {
+    @apply font-sans text-type-subheading text-heading;
   }
 
   .type-body {
     @apply font-sans text-type-body text-body;
   }
 
+  .type-caption {
+    @apply font-label text-type-caption text-muted;
+  }
+
   .type-meta {
-    @apply font-label text-type-meta text-muted;
+    @apply font-label text-type-caption text-muted;
   }
 
   .type-label {
-    @apply font-label text-type-label uppercase text-muted;
+    @apply font-label text-type-caption uppercase text-muted;
   }
 
   .type-copyright {
-    @apply font-label text-type-copyright uppercase text-muted;
+    @apply font-label text-type-caption uppercase text-muted;
   }
 
   .frosted-nav {

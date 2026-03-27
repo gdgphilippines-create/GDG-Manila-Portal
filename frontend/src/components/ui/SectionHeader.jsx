@@ -7,7 +7,7 @@ export default function SectionHeader({ eyebrow, title, description, align = 'le
       {eyebrow ? (
         <p className="type-label">{eyebrow}</p>
       ) : null}
-      <h1 className="type-hero mt-3">
+      <h1 className="type-heading mt-3">
         {title}
       </h1>
       {description ? (

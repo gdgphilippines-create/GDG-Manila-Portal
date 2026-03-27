@@ -10,6 +10,7 @@ const EVENT_DESCRIPTION_PREVIEW_MAX_LENGTH = 220
 
 let inMemoryEventDraft = null
 
+const LOCAL_EVENT_DRAFT_KEY = 'gdg-manila-program-event-draft'
 const LOCAL_SESSION_PRESENTATION_KEY = 'gdg-manila-program-session-presentation'
 
 function readLocalJson(key) {
@@ -110,6 +111,35 @@ function buildDescriptionPreview(value) {
   return `${(lastWordBoundary > 0 ? truncatedValue.slice(0, lastWordBoundary) : truncatedValue).trim()}...`
 }
 
+/**
+ * Converts a display time label (e.g. "09:30 AM") back to 24-hour format
+ * ("09:30") for the backend. If the value is already in 24h or ISO format,
+ * it is returned as-is.
+ */
+function toBackendTimeValue(value) {
+  const rawValue = String(value || '').trim()
+
+  if (!rawValue) {
+    return ''
+  }
+
+  const match = rawValue.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+
+  if (!match) {
+    return rawValue
+  }
+
+  let hours = Number(match[1]) % 12
+  const minutes = match[2]
+  const meridiem = match[3].toUpperCase()
+
+  if (meridiem === 'PM') {
+    hours += 12
+  }
+
+  return `${String(hours).padStart(2, '0')}:${minutes}`
+}
+
 function toBackendSessionData(session) {
   const normalizedSession = normalizeSession(session)
 
@@ -117,8 +147,8 @@ function toBackendSessionData(session) {
     id: normalizedSession.id,
     title: normalizedSession.title || '',
     speaker: normalizedSession.speakerName || '',
-    startTime: normalizedSession.schedule?.startTime || '',
-    endTime: normalizedSession.schedule?.endTime || '',
+    startTime: toBackendTimeValue(normalizedSession.schedule?.startTime),
+    endTime: toBackendTimeValue(normalizedSession.schedule?.endTime),
     location: normalizedSession.venue || '',
     description: normalizedSession.description || '',
   }
@@ -157,6 +187,7 @@ const defaultProgramState = {
     description: programCopy.fullDescription,
     location: programCopy.eventDetails?.venue || 'Makati, Manila',
     date: 'Oct 20, 2026',
+    showFeedback: false,
   },
   sessions: sortSessions(initialSessions.map(normalizeSession)),
 }
@@ -178,10 +209,18 @@ function normalizeProgramState(programState = {}) {
 }
 
 export function getDefaultProgramState() {
+  const persistedEventDraft = readLocalJson(LOCAL_EVENT_DRAFT_KEY)
   const persistedSessions = readLocalJson(LOCAL_SESSION_PRESENTATION_KEY)
 
   const baseState = normalizeProgramState({
     ...defaultProgramState,
+    eventDraft:
+      persistedEventDraft && typeof persistedEventDraft === 'object'
+        ? {
+            ...defaultProgramState.eventDraft,
+            ...persistedEventDraft,
+          }
+        : defaultProgramState.eventDraft,
     sessions: Array.isArray(persistedSessions)
       ? persistedSessions
       : defaultProgramState.sessions,
@@ -228,6 +267,7 @@ export function buildProgramEventMeta(eventDraft) {
     heroImageAlt: `${eventDraft.title} Banner`,
     description: buildDescriptionPreview(fullDescription),
     fullDescription,
+    showFeedback: Boolean(eventDraft.showFeedback),
     eventDetails: {
       ...programCopy.eventDetails,
       venue: eventDraft.location,
@@ -274,6 +314,7 @@ export const programService = {
 
     if (programState?.eventDraft) {
       inMemoryEventDraft = normalizedProgram.eventDraft
+      writeLocalJson(LOCAL_EVENT_DRAFT_KEY, normalizedProgram.eventDraft)
     }
 
     if (programState?.sessions) {

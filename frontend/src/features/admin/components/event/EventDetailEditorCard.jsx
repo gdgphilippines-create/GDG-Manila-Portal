@@ -46,7 +46,7 @@ function FieldLabel({ children }) {
 function UnderlineInput({ className = '', ...props }) {
   return (
     <input
-      className={`w-full border-b border-divider bg-transparent px-0 py-2 text-type-field text-heading outline-none transition focus:border-primary placeholder:text-muted ${className}`.trim()}
+      className={`w-full border-b border-divider bg-transparent px-0 py-2 text-type-body text-heading outline-none transition focus:border-primary placeholder:text-muted ${className}`.trim()}
       {...props}
     />
   )
@@ -70,7 +70,7 @@ function UnderlineIconInput({
         className: 'h-4 w-4 shrink-0 text-muted',
       })}
       <input
-        className={`w-full bg-transparent px-0 text-type-field text-heading outline-none placeholder:text-muted ${inputClassName}`.trim()}
+        className={`w-full bg-transparent px-0 text-type-body text-heading outline-none placeholder:text-muted ${inputClassName}`.trim()}
         ref={inputRef}
         {...props}
       />
@@ -190,7 +190,7 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
             dropHint=""
             onValueChange={(value) => updateField('description', value)}
             rows={3}
-            textareaClassName="min-h-20 text-type-field"
+            textareaClassName="min-h-20 text-type-body"
             value={draft.description}
           />
         </div>
@@ -220,6 +220,23 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
             type="date"
             value={formatDateForInput(draft.date)}
           />
+        </div>
+      </label>
+
+      <label className="flex items-start gap-3 rounded-dialog border border-divider bg-card px-4 py-3">
+        <input
+          checked={Boolean(draft.showFeedback)}
+          className="mt-1 h-4 w-4 rounded border-divider text-primary focus:ring-primary/25"
+          onChange={(event) => updateField('showFeedback', event.target.checked)}
+          type="checkbox"
+        />
+        <div className="min-w-0">
+          <span className="text-type-caption uppercase tracking-label text-heading">
+            Show Feedback CTA
+          </span>
+          <p className="mt-1 text-type-caption text-muted">
+            Decide when attendees should see the feedback card at the end of the agenda.
+          </p>
         </div>
       </label>
 

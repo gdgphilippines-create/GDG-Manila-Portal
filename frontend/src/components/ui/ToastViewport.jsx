@@ -145,7 +145,7 @@ function ToastCard({ toast, onDismiss }) {
         aria-hidden="true"
         className={`h-2 w-2 shrink-0 rounded-full ${toneDotClassNames[toast.type] ?? toneDotClassNames.info}`.trim()}
       />
-      <p className="min-w-0 flex-1 truncate px-3 text-type-toast leading-none text-heading">
+      <p className="min-w-0 flex-1 truncate px-3 text-type-caption leading-none text-heading">
         {toast.message}
       </p>
       <button

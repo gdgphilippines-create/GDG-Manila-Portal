@@ -1,5 +1,6 @@
 export { default as EventHeader } from './components/overview/EventHeader'
 export { default as EventSidebar } from './components/overview/EventSidebar'
+export { default as FeedbackCTA } from './components/agenda/FeedbackCTA'
 export { default as SessionCard } from './components/agenda/SessionCard'
 export { default as SessionTimeline } from './components/agenda/SessionTimeline'
 export { default as TagBadge } from './components/shared/TagBadge'

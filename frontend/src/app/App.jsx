@@ -42,7 +42,8 @@ function AuthGate({ children }) {
   const location = useLocation()
   const shouldRenderToasts =
     location.pathname !== '/login' &&
-    !location.pathname.startsWith('/admin-panel')
+    !location.pathname.startsWith('/admin-panel') &&
+    !location.pathname.startsWith('/facilitator')
 
   if (loading) {
     return (

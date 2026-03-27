@@ -11,7 +11,7 @@ export default function SectionCard({
     <section className={`${frameClassName} ${className}`.trim()}>
       {title ? (
         <div className="mb-4">
-          <h3 className={`type-body font-semibold text-heading ${titleClassName}`.trim()}>
+          <h3 className={`type-subheading text-heading ${titleClassName}`.trim()}>
             {title}
           </h3>
         </div>

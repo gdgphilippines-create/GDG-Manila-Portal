@@ -55,14 +55,16 @@ export default function SessionCard({ onAction, session }) {
         <span className="font-label text-xs font-semibold uppercase tracking-label text-warning">
           {timeLabel}
         </span>
-        <h3 className="mt-1.5 text-xl font-bold text-heading">{normalizedSession.title}</h3>
+        <h3 className="mt-1.5 text-type-subheading font-bold tracking-tight text-heading">
+          {normalizedSession.title}
+        </h3>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-label ${sessionTypeTone.badge}`.trim()}>
             {getSessionTypeLabel(normalizedSession)}
           </span>
         </div>
         {normalizedSession.description ? (
-          <p className="mt-2.5 max-w-2xl text-sm leading-6 text-body">{normalizedSession.description}</p>
+          <p className="mt-2.5 max-w-2xl text-type-body text-body">{normalizedSession.description}</p>
         ) : null}
         {action && label ? (
           <div className="mt-4">
@@ -78,7 +80,9 @@ export default function SessionCard({ onAction, session }) {
       <span className="font-label text-xs font-semibold uppercase tracking-label text-primary">
         {timeLabel}
       </span>
-      <h3 className="mt-1.5 text-xl font-bold text-heading">{normalizedSession.title}</h3>
+      <h3 className="mt-1.5 text-type-subheading font-bold tracking-tight text-heading">
+        {normalizedSession.title}
+      </h3>
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-label ${sessionTypeTone.badge}`.trim()}>
@@ -88,7 +92,7 @@ export default function SessionCard({ onAction, session }) {
 
       <div className="mb-4 mt-2.5 space-y-2">
         {normalizedSession.speakerName ? (
-          <div className="flex items-center gap-2 text-sm leading-5 text-body">
+          <div className="flex items-center gap-2 text-type-caption leading-5 text-body">
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success-bg">
               <LuUserRound aria-hidden="true" className="h-4 w-4 text-success" />
             </div>
@@ -100,13 +104,13 @@ export default function SessionCard({ onAction, session }) {
         ) : null}
 
         {normalizedSession.description ? (
-          <p className="max-w-2xl text-sm leading-6 text-body">
+          <p className="max-w-2xl text-type-body text-body">
             {normalizedSession.description}
           </p>
         ) : null}
 
         {normalizedSession.venue ? (
-          <div className="flex items-center gap-2 text-sm leading-5 text-muted">
+          <div className="flex items-center gap-2 text-type-caption leading-5 text-muted">
             <LuMapPin aria-hidden="true" className="h-4 w-4" />
             <span>{normalizedSession.venue}</span>
           </div>

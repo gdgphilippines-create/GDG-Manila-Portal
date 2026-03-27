@@ -7,6 +7,8 @@ export default function PageShell({
   centered = false,
   showNavbar = true,
   navbarContentClassName,
+  navbarSpacerClassName = NAVBAR_SPACER_CLASS_NAME,
+  mainClassName = '',
 }) {
   const layoutClassName = centered ? 'flex items-center justify-center' : ''
   const contentClassName = centered
@@ -18,10 +20,10 @@ export default function PageShell({
       {showNavbar ? (
         <>
           <Navbar contentWidthClassName={navbarContentClassName} />
-          <div aria-hidden="true" className={NAVBAR_SPACER_CLASS_NAME} />
+          <div aria-hidden="true" className={navbarSpacerClassName} />
         </>
       ) : null}
-      <main className={`layout-page text-body ${layoutClassName}`.trim()}>
+      <main className={`layout-page text-body ${layoutClassName} ${mainClassName}`.trim()}>
         <div className={contentClassName}>
           {children}
         </div>

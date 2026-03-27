@@ -7,6 +7,9 @@ import AdminLayout from '@/pages/admin/AdminLayout'
 import OverviewPage from '@/pages/admin/OverviewPage'
 import ProgramManagePage from '@/pages/admin/ProgramManagePage'
 import AlertsPage from '@/pages/admin/AlertsPage'
+import FacilitatorLayout from '@/pages/facilitator/FacilitatorLayout'
+import FacilitatorOverviewPage from '@/pages/facilitator/OverviewPage'
+import VerificationPage from '@/pages/facilitator/VerificationPage'
 
 export const routes = [
   {
@@ -46,6 +49,26 @@ export const routes = [
       {
         path: 'alerts',
         element: <AlertsPage />,
+      },
+    ],
+  },
+  {
+    path: '/facilitator',
+    isProtected: true,
+    allowedRoles: [ROLES.FACILITATOR, ROLES.ADMIN],
+    element: <FacilitatorLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate replace to="overview" />,
+      },
+      {
+        path: 'overview',
+        element: <FacilitatorOverviewPage />,
+      },
+      {
+        path: 'verification',
+        element: <VerificationPage />,
       },
     ],
   },

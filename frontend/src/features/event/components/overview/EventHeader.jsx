@@ -9,17 +9,17 @@ export default function EventHeader({
 }) {
   return (
     <section className="lg:col-span-8 lg:pr-6" data-purpose="event-header">
-      <h1 className="font-display text-4xl font-bold tracking-tight text-heading md:text-5xl">
+      <h1 className="type-heading">
         {title}
       </h1>
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-body">
+      <p className="type-body mt-5 max-w-3xl">
         {description}
       </p>
       {onToggleDescription ? (
         <button
           aria-expanded={isDescriptionExpanded}
           aria-label={toggleDescriptionLabel}
-          className="mt-6 inline-flex h-11 w-11 items-center justify-center rounded-full border border-divider bg-card text-muted transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+          className="mt-6 inline-flex items-center justify-center text-slate-400 transition hover:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
           onClick={onToggleDescription}
           type="button"
         >
