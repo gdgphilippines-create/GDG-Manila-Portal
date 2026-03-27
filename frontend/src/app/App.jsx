@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import { ProtectedRoute } from '@/components/layout'
+import { ToastViewport } from '@/components/ui'
 import { useAuth } from '@/app/hooks'
 import { AuthProvider } from '@/app/providers'
+import { notificationsService } from '@/services/notifications'
 import { routes } from './routes'
 
 function getRouteElement(route) {
@@ -37,6 +40,9 @@ function renderRoutes(routeList) {
 function AuthGate({ children }) {
   const { isAuthenticated, loading } = useAuth()
   const location = useLocation()
+  const shouldRenderToasts =
+    location.pathname !== '/login' &&
+    !location.pathname.startsWith('/admin-panel')
 
   if (loading) {
     return (
@@ -50,10 +56,19 @@ function AuthGate({ children }) {
     return <Navigate replace state={{ from: location }} to="/login" />
   }
 
-  return children
+  return (
+    <>
+      {children}
+      {shouldRenderToasts ? <ToastViewport /> : null}
+    </>
+  )
 }
 
 export default function App() {
+  useEffect(() => {
+    void notificationsService.initialize()
+  }, [])
+
   return (
     <BrowserRouter>
       <AuthProvider>

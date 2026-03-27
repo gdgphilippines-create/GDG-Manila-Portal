@@ -2,19 +2,21 @@ export default function HeroBanner({
   altText,
   className = '',
   framed = true,
-  height = 250,
+  height,
   imageUrl,
+  imageFit = 'cover',
 }) {
-  const resolvedHeight = typeof height === 'number' ? `${height}px` : height
   const frameClassName = framed ? 'rounded-[28px] border border-divider bg-card' : ''
+  const imageFitClassName = imageFit === 'contain' ? 'object-contain' : 'object-cover'
+  const imageStyle = height == null ? undefined : { height: typeof height === 'number' ? `${height}px` : height }
 
   return (
     <div className={`overflow-hidden ${frameClassName} ${className}`.trim()}>
       <img
         alt={altText}
-        className="w-full object-cover"
+        className={`w-full ${imageFitClassName}`.trim()}
         src={imageUrl}
-        style={{ height: resolvedHeight }}
+        style={imageStyle}
       />
     </div>
   )

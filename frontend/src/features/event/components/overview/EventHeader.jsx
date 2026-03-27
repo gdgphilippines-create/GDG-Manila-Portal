@@ -1,12 +1,11 @@
-import { LuChevronRight } from 'react-icons/lu'
-
-const defaultReadMoreLabel = 'Read full description'
+import { LuChevronDown } from 'react-icons/lu'
 
 export default function EventHeader({
   description,
-  onReadMore,
-  readMoreLabel = defaultReadMoreLabel,
+  isDescriptionExpanded = false,
+  onToggleDescription,
   title,
+  toggleDescriptionLabel = 'Toggle description',
 }) {
   return (
     <section className="lg:col-span-8 lg:pr-6" data-purpose="event-header">
@@ -16,14 +15,18 @@ export default function EventHeader({
       <p className="mt-5 max-w-3xl text-lg leading-8 text-body">
         {description}
       </p>
-      {onReadMore ? (
+      {onToggleDescription ? (
         <button
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-divider bg-white px-4 py-2.5 text-sm font-semibold text-heading shadow-sm transition hover:border-primary/40 hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
-          onClick={onReadMore}
+          aria-expanded={isDescriptionExpanded}
+          aria-label={toggleDescriptionLabel}
+          className="mt-6 inline-flex h-11 w-11 items-center justify-center rounded-full border border-divider bg-white text-muted transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+          onClick={onToggleDescription}
           type="button"
         >
-          <span>{readMoreLabel}</span>
-          <LuChevronRight aria-hidden="true" className="h-4 w-4" />
+          <LuChevronDown
+            aria-hidden="true"
+            className={`h-5 w-5 transition-transform duration-200 ${isDescriptionExpanded ? 'rotate-180' : 'rotate-0'}`.trim()}
+          />
         </button>
       ) : null}
     </section>

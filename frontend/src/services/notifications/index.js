@@ -23,6 +23,25 @@ function normalizeAlert(alert) {
   }
 }
 
+function normalizeNotification(notification) {
+  if (!notification || typeof notification !== 'object') {
+    return null
+  }
+
+  const message = String(notification.message || '').trim()
+
+  if (!message) {
+    return null
+  }
+
+  return {
+    durationMs: 5000,
+    id: notification.id || `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    message,
+    type: String(notification.type || 'info') || 'info',
+  }
+}
+
 export const notificationsService = {
   async initialize() {
     if (config.isDev) {
@@ -44,6 +63,20 @@ export const notificationsService = {
     const savedAlert = normalizeAlert(await postAlert(normalizedEmail, message, type))
     emit(EVENT_BUS_EVENTS.ALERTS_CHANGED, savedAlert)
     return savedAlert
+  },
+
+  notify(message, options = {}) {
+    const notification = normalizeNotification({
+      ...options,
+      message,
+    })
+
+    if (!notification) {
+      return null
+    }
+
+    emit(EVENT_BUS_EVENTS.NOTIFICATION_RECEIVED, notification)
+    return notification
   },
 
   subscribe(onChange) {

@@ -1,7 +1,6 @@
 import { PageShell } from '@/components/layout'
 import { VIEW_STATES } from '@/constants'
-import { StatusCard } from '@/features/event'
-import { useEventViewModel } from '@/features/event/hooks/useEventViewModel'
+import { StatusCard, useEventViewModel } from '@/features/event'
 import ProgramPage from './ProgramPage'
 
 export default function UserPage() {

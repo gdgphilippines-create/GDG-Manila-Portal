@@ -1,5 +1,7 @@
 import Navbar from './Navbar'
 
+const NAVBAR_SPACER_CLASS_NAME = 'h-[5.5rem]'
+
 export default function PageShell({
   children,
   centered = false,
@@ -13,7 +15,12 @@ export default function PageShell({
 
   return (
     <>
-      {showNavbar ? <Navbar contentWidthClassName={navbarContentClassName} /> : null}
+      {showNavbar ? (
+        <>
+          <Navbar contentWidthClassName={navbarContentClassName} />
+          <div aria-hidden="true" className={NAVBAR_SPACER_CLASS_NAME} />
+        </>
+      ) : null}
       <main className={`layout-page text-body ${layoutClassName}`.trim()}>
         <div className={contentClassName}>
           {children}

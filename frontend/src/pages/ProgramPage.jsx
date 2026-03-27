@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { PageShell } from '@/components/layout'
 import { HeroBanner } from '@/components/ui'
-import { SessionTimeline, AlertBanner, EventHeader, EventSidebar } from '@/features/event'
-import { useProgramViewModel } from '@/features/event/hooks/useProgramViewModel'
+import { SessionTimeline, EventHeader, EventSidebar, useProgramViewModel } from '@/features/event'
 import { sortSessions } from '@/lib/programSessionUtils'
+import { notificationsService } from '@/services/notifications'
 
 function getDateRange(groups) {
   if (groups.length === 0) {
@@ -40,7 +40,6 @@ function groupSessionsByDay(sessions) {
 
 function ProgramContent({ eventMeta, sessions }) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
-  const [resourceNotice, setResourceNotice] = useState(null)
   const sessionGroups = groupSessionsByDay(sessions)
 
   function handleReadMore() {
@@ -50,37 +49,36 @@ function ProgramContent({ eventMeta, sessions }) {
   function handleSessionAction(action, label) {
     if (action.href) {
       window.open(action.href, '_blank', 'noopener,noreferrer')
-      setResourceNotice(null)
       return
     }
 
-    setResourceNotice(
-      eventMeta.pendingActionMessage.replace('{label}', label),
-    )
+    notificationsService.notify(eventMeta.pendingActionMessage.replace('{label}', label), {
+      type: 'info',
+    })
   }
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10">
-      <AlertBanner />
-
-      <div className="overflow-hidden rounded-card border border-divider bg-card shadow-sm">
+    <section className="pb-6 md:pb-10">
+      <div className="border-y border-divider/80 bg-[linear-gradient(180deg,_rgb(var(--color-bg-card))_0%,_rgb(var(--color-bg-page))_100%)]">
         <HeroBanner
           altText={eventMeta.heroImageAlt}
           framed={false}
           imageUrl={eventMeta.heroImageUrl}
+          imageFit="contain"
         />
 
-        <div className="px-6 py-6 md:px-8 md:py-8">
+        <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-6 md:py-10 lg:px-8">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
             <EventHeader
               description={isDescriptionExpanded ? eventMeta.fullDescription : eventMeta.description}
-              onReadMore={handleReadMore}
-              readMoreLabel={
+              isDescriptionExpanded={isDescriptionExpanded}
+              onToggleDescription={handleReadMore}
+              title={eventMeta.title}
+              toggleDescriptionLabel={
                 isDescriptionExpanded
                   ? eventMeta.readLessDescriptionLabel
                   : eventMeta.readFullDescriptionLabel
               }
-              title={eventMeta.title}
             />
             <EventSidebar
               dateRange={getDateRange(sessionGroups)}
@@ -90,13 +88,9 @@ function ProgramContent({ eventMeta, sessions }) {
         </div>
       </div>
 
-      {resourceNotice ? (
-        <p className="mt-8 rounded-2xl border border-divider bg-card px-4 py-3 text-sm text-body" role="status">
-          {resourceNotice}
-        </p>
-      ) : null}
-
-      <SessionTimeline groups={sessionGroups} onAction={handleSessionAction} />
+      <div className="mx-auto w-full max-w-5xl px-4">
+        <SessionTimeline groups={sessionGroups} onAction={handleSessionAction} />
+      </div>
     </section>
   )
 }

@@ -1,8 +1,12 @@
+import { useEffect, useRef, useState } from 'react'
 import { Popover } from '@/components/ui'
 import { useAuth } from '@/app/hooks/useAuth'
 import { navbarCopy } from '@/constants/common'
 import gdgLogo from '@/assets/BWAI-26-main-Logo-lockups-horizontal.png'
 import { LuMenu } from 'react-icons/lu'
+
+const NAVBAR_TOP_THRESHOLD = 24
+const NAVBAR_SCROLL_DELTA = 10
 
 function ProfileAvatar({ name }) {
   const initials = name
@@ -25,9 +29,61 @@ function ProfileAvatar({ name }) {
 export default function Navbar({ contentWidthClassName = 'max-w-content' }) {
   const { user, logout } = useAuth()
   const displayName = user?.firstName || user?.name
+  const lastScrollYRef = useRef(0)
+  const tickingRef = useRef(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    function updateNavbarVisibility() {
+      const currentScrollY = window.scrollY
+      const scrollDelta = currentScrollY - lastScrollYRef.current
+
+      setIsScrolled(currentScrollY > 8)
+
+      if (currentScrollY <= NAVBAR_TOP_THRESHOLD) {
+        setIsVisible(true)
+      } else if (scrollDelta >= NAVBAR_SCROLL_DELTA) {
+        setIsVisible(false)
+      } else if (scrollDelta <= -NAVBAR_SCROLL_DELTA) {
+        setIsVisible(true)
+      }
+
+      lastScrollYRef.current = currentScrollY
+      tickingRef.current = false
+    }
+
+    function handleScroll() {
+      if (tickingRef.current) {
+        return
+      }
+
+      tickingRef.current = true
+      window.requestAnimationFrame(updateNavbarVisibility)
+    }
+
+    updateNavbarVisibility()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  const headerClassName = [
+    'fixed inset-x-0 top-0 z-40 border-b border-divider supports-[backdrop-filter]:bg-white/85',
+    'transition-transform duration-300 ease-out will-change-transform',
+    isScrolled ? 'bg-white/95 shadow-[0_10px_30px_rgba(15,23,42,0.08)] backdrop-blur-sm' : 'bg-white/75',
+    isVisible ? 'translate-y-0' : '-translate-y-full',
+  ].join(' ')
 
   return (
-    <header className="border-b border-divider bg-white/95 backdrop-blur-sm">
+    <header
+      className={headerClassName}
+      onFocusCapture={() => {
+        setIsVisible(true)
+      }}
+    >
       <div className={`mx-auto grid w-full ${contentWidthClassName} grid-cols-[1fr_auto_1fr] items-center px-section-x py-4 md:flex md:justify-between`.trim()}>
         <div className="justify-self-start md:hidden">
           <button
