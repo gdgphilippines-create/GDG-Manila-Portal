@@ -28,7 +28,7 @@ function TypePicker({ type, onSelect }) {
           className="inline-flex h-11 min-w-[8.5rem] items-center justify-between gap-3 rounded-full border border-divider bg-card px-4 text-left text-heading transition hover:border-primary/30"
           type="button"
         >
-          <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${toneClassNames[selectedTone.value]}`}>
+          <span className={`inline-flex rounded-full border px-3 py-1 text-type-caption uppercase tracking-label ${toneClassNames[selectedTone.value]}`}>
             {selectedTone.label}
           </span>
           <LuChevronDown aria-hidden="true" className="h-4 w-4 text-muted" />
@@ -43,7 +43,7 @@ function TypePicker({ type, onSelect }) {
 
               return (
                 <button
-                  className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${
+                  className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-label transition ${
                     isSelected
                       ? toneClassNames[option.value]
                       : 'border-divider bg-card text-heading hover:border-primary/30 hover:text-primary'
@@ -145,7 +145,7 @@ export default function AlertsPage() {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <TypePicker onSelect={setType} type={type} />
 
-          <div className={`flex min-w-0 flex-1 items-center gap-3 rounded-[24px] border bg-card px-4 py-3 transition focus-within:border-primary ${
+          <div className={`flex min-w-0 flex-1 items-center gap-3 rounded-dialog border bg-card px-4 py-3 transition focus-within:border-primary ${
             error ? 'border-error' : 'border-divider'
           }`}>
             <LuMessageSquare aria-hidden="true" className="h-4 w-4 shrink-0 text-muted" />
@@ -158,7 +158,7 @@ export default function AlertsPage() {
           </div>
 
           <button
-            className="inline-flex h-11 min-w-[9rem] items-center justify-center rounded-full bg-primary px-5 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex h-11 min-w-[9rem] items-center justify-center rounded-full bg-primary px-5 text-xs font-semibold uppercase tracking-label text-card transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
             disabled={isSubmitting || !authEmail}
             type="submit"
           >
@@ -174,8 +174,8 @@ export default function AlertsPage() {
       </form>
 
       {currentAlert?.active ? (
-        <div className={`flex flex-wrap items-center gap-3 rounded-[20px] border px-4 py-3 ${currentToneClassName}`.trim()}>
-          <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${currentToneClassName}`.trim()}>
+        <div className={`flex flex-wrap items-center gap-3 rounded-panel border px-4 py-3 ${currentToneClassName}`.trim()}>
+          <span className={`inline-flex rounded-full border px-3 py-1 text-type-caption uppercase tracking-label ${currentToneClassName}`.trim()}>
             {currentToneLabel}
           </span>
           <p className="min-w-0 flex-1 text-sm font-medium text-current">
@@ -184,7 +184,7 @@ export default function AlertsPage() {
           </p>
           <button
             aria-label="Clear broadcast"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-current/70 transition hover:bg-black/5 hover:text-current disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-current/70 transition hover:bg-neutral/5 hover:text-current disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isSubmitting || !authEmail}
             onClick={handleClearAlert}
             type="button"

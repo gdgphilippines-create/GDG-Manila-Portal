@@ -129,7 +129,7 @@ function ToastCard({ toast, onDismiss }) {
 
   return (
     <div
-      className="pointer-events-auto flex h-12 min-w-[200px] max-w-[360px] w-fit items-center rounded-full bg-white pl-3 pr-3 shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+      className="pointer-events-auto flex h-12 min-w-[200px] max-w-[360px] w-fit items-center rounded-full bg-card pl-3 pr-3 shadow-toast"
       role="status"
       style={{
         opacity: isVisible ? 1 : 0,
@@ -145,12 +145,12 @@ function ToastCard({ toast, onDismiss }) {
         aria-hidden="true"
         className={`h-2 w-2 shrink-0 rounded-full ${toneDotClassNames[toast.type] ?? toneDotClassNames.info}`.trim()}
       />
-      <p className="min-w-0 flex-1 truncate px-3 text-[14px] font-medium leading-none text-heading">
+      <p className="min-w-0 flex-1 truncate px-3 text-type-toast leading-none text-heading">
         {toast.message}
       </p>
       <button
         aria-label="Dismiss notification"
-        className="inline-flex h-5 w-5 shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+        className="inline-flex h-5 w-5 shrink-0 items-center justify-center text-muted transition-colors hover:text-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
         type="button"
         onClick={() => onDismiss(toast.id)}
       >

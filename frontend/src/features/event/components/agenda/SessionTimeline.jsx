@@ -16,7 +16,7 @@ export default function SessionTimeline({ groups = [], onAction }) {
     <section className="mt-20" data-purpose="agenda-timeline">
       {groups.map((group) => (
         <div className="mb-14 last:mb-0" key={group.id}>
-          <h2 className="mb-12 flex items-center gap-3 font-label text-lg font-bold uppercase tracking-[0.2em] text-heading">
+          <h2 className="mb-12 flex items-center gap-3 font-label text-lg font-bold uppercase tracking-label-extra-wide text-heading">
             <span>{group.dateLabel}</span>
             <span aria-hidden="true" className="text-muted">·</span>
             <span className="text-primary">{group.dayLabel}</span>

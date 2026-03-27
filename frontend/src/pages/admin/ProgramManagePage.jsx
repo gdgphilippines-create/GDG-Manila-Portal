@@ -4,6 +4,7 @@ import { adminActionsCopy } from '@/constants/admin'
 import { VIEW_STATES } from '@/constants'
 import { EventDetailEditorCard, SessionForm } from '@/features/admin'
 import { useOutletContext } from 'react-router-dom'
+import { streamStatusClassNames } from '@/styles/theme'
 import {
   emptySession,
   getSessionTypeLabel,
@@ -18,19 +19,10 @@ const streamStatusIcons = {
   [VIEW_STATES.ENDED]: LuCircleOff,
 }
 
-const streamStatusClassNames = {
-  [VIEW_STATES.WAITING]: {
-    active: 'border-slate-300 bg-slate-100 text-slate-700',
-    inactive: 'border-transparent bg-transparent text-slate-500 hover:text-slate-700',
-  },
-  [VIEW_STATES.LIVE]: {
-    active: 'border-emerald-300 bg-emerald-100 text-emerald-800',
-    inactive: 'border-transparent bg-transparent text-slate-500 hover:text-emerald-700',
-  },
-  [VIEW_STATES.ENDED]: {
-    active: 'border-rose-300 bg-rose-100 text-rose-700',
-    inactive: 'border-transparent bg-transparent text-slate-500 hover:text-rose-700',
-  },
+const viewToToneKey = {
+  [VIEW_STATES.WAITING]: 'waiting',
+  [VIEW_STATES.LIVE]: 'live',
+  [VIEW_STATES.ENDED]: 'ended',
 }
 
 function groupSessionsByDate(sessions) {
@@ -142,7 +134,8 @@ export default function ProgramManagePage() {
           <div className="inline-flex flex-wrap items-center gap-1.5 rounded-full border border-divider bg-card/60 p-1">
             {adminActionsCopy.map((action) => {
               const Icon = streamStatusIcons[action.view] ?? LuClock3
-              const tone = streamStatusClassNames[action.view] ?? streamStatusClassNames[VIEW_STATES.WAITING]
+              const toneKey = viewToToneKey[action.view] ?? 'waiting'
+              const tone = streamStatusClassNames[toneKey]
               const isActive = action.view === currentView
 
               return (
@@ -159,7 +152,7 @@ export default function ProgramManagePage() {
                   <Icon aria-hidden="true" className="h-4 w-4" />
                   <span>{action.label}</span>
                   {isActive && action.view === VIEW_STATES.LIVE ? (
-                    <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-[pulse_1.5s_ease-in-out_infinite]" />
+                    <span className="inline-flex h-2 w-2 rounded-full bg-success animate-[pulse_1.5s_ease-in-out_infinite]" />
                   ) : null}
                 </button>
               )
@@ -179,7 +172,7 @@ export default function ProgramManagePage() {
           {error ? <p className="type-body text-error">{error}</p> : null}
 
           {addingNew ? (
-            <div className="rounded-[24px] border border-divider/80 bg-card/70">
+            <div className="rounded-dialog border border-divider/80 bg-card/70">
               <SessionForm
                 onChange={setNewSession}
                 onCancel={() => {
@@ -199,7 +192,7 @@ export default function ProgramManagePage() {
             {groupedSessions.map((group) => (
               <section className="space-y-2" key={group.id}>
                 <div className="sticky top-0 z-10 bg-[rgb(var(--color-bg-page))]/95 py-2 backdrop-blur-sm">
-                  <p className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                  <p className="font-label text-xs font-semibold uppercase tracking-label-mid text-body">
                     {`${group.dateLabel} · ${group.dayLabel}`.toUpperCase()}
                   </p>
                 </div>
@@ -216,7 +209,7 @@ export default function ProgramManagePage() {
                     ].filter(Boolean).join(' · ')
 
                     return (
-                      <div className="rounded-[20px] border border-divider/80 bg-card/70" key={session.id}>
+                      <div className="rounded-panel border border-divider/80 bg-card/70" key={session.id}>
                         {isEditing ? (
                           <SessionForm
                             onChange={setEditingDraft}
@@ -238,10 +231,10 @@ export default function ProgramManagePage() {
                             type="button"
                           >
                             <div className="min-w-[112px] shrink-0 pt-0.5">
-                              <p className="text-[13px] font-normal leading-5 text-slate-600">
+                              <p className="text-type-field leading-5 text-body">
                                 {session.schedule.startTime}
                               </p>
-                              <p className="text-[13px] font-normal leading-5 text-slate-600">
+                              <p className="text-type-field leading-5 text-body">
                                 {session.schedule.endTime}
                               </p>
                             </div>
@@ -251,7 +244,7 @@ export default function ProgramManagePage() {
                                 {session.title || 'Untitled session'}
                               </h3>
                               <span
-                                className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${sessionTypeTone.badge}`.trim()}
+                                className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-type-badge uppercase tracking-label-narrow ${sessionTypeTone.badge}`.trim()}
                               >
                                 {getSessionTypeLabel(session)}
                               </span>

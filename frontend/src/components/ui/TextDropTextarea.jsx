@@ -170,7 +170,7 @@ export default function TextDropTextarea({
   return (
     <>
       <div
-        className={`rounded-[24px] border border-dashed p-2 transition ${
+        className={`rounded-dialog border border-dashed p-2 transition ${
           isDropActive
             ? 'border-primary/50 bg-primary/5'
             : 'border-divider/80 bg-footer/40'

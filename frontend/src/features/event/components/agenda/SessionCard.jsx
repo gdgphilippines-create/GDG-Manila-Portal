@@ -15,7 +15,7 @@ function SessionActionButton({ action, label, onAction }) {
     ? 'inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-xs font-bold text-card transition hover:brightness-95'
     : isSlidesAction
       ? 'inline-flex items-center gap-2 rounded-full bg-primary/10 px-6 py-2.5 text-xs font-bold text-primary transition hover:bg-primary/15'
-      : 'inline-flex items-center gap-2 rounded-full bg-footer px-6 py-2.5 text-xs font-bold text-muted transition hover:bg-slate-200'
+      : 'inline-flex items-center gap-2 rounded-full bg-footer px-6 py-2.5 text-xs font-bold text-muted transition hover:bg-divider'
 
   return (
     <button
@@ -51,13 +51,13 @@ export default function SessionCard({ onAction, session }) {
     const label = action ? programCopy.actionLabels[action.labelKey] : null
 
     return (
-      <article className="rounded-[24px] border border-divider bg-card px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-        <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-warning">
+      <article className="rounded-dialog border border-divider bg-card px-5 py-4 shadow-session">
+        <span className="font-label text-xs font-semibold uppercase tracking-label text-warning">
           {timeLabel}
         </span>
         <h3 className="mt-1.5 text-xl font-bold text-heading">{normalizedSession.title}</h3>
         <div className="mt-2 flex flex-wrap items-center gap-2">
-          <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] ${sessionTypeTone.badge}`.trim()}>
+          <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-label ${sessionTypeTone.badge}`.trim()}>
             {getSessionTypeLabel(normalizedSession)}
           </span>
         </div>
@@ -74,14 +74,14 @@ export default function SessionCard({ onAction, session }) {
   }
 
   return (
-    <article className="rounded-[24px] border border-divider bg-card px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-      <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+    <article className="rounded-dialog border border-divider bg-card px-5 py-4 shadow-session">
+      <span className="font-label text-xs font-semibold uppercase tracking-label text-primary">
         {timeLabel}
       </span>
       <h3 className="mt-1.5 text-xl font-bold text-heading">{normalizedSession.title}</h3>
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] ${sessionTypeTone.badge}`.trim()}>
+        <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-label ${sessionTypeTone.badge}`.trim()}>
           {getSessionTypeLabel(normalizedSession)}
         </span>
       </div>

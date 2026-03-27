@@ -37,7 +37,7 @@ function formatDateForDisplay(value) {
 
 function FieldLabel({ children }) {
   return (
-    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+    <span className="text-type-caption uppercase tracking-label text-body">
       {children}
     </span>
   )
@@ -46,7 +46,7 @@ function FieldLabel({ children }) {
 function UnderlineInput({ className = '', ...props }) {
   return (
     <input
-      className={`w-full border-b border-divider bg-transparent px-0 py-2 text-[13px] text-heading outline-none transition focus:border-primary placeholder:text-muted ${className}`.trim()}
+      className={`w-full border-b border-divider bg-transparent px-0 py-2 text-type-field text-heading outline-none transition focus:border-primary placeholder:text-muted ${className}`.trim()}
       {...props}
     />
   )
@@ -67,10 +67,10 @@ function UnderlineIconInput({
     >
       {createElement(Icon, {
         'aria-hidden': 'true',
-        className: 'h-4 w-4 shrink-0 text-slate-500',
+        className: 'h-4 w-4 shrink-0 text-muted',
       })}
       <input
-        className={`w-full bg-transparent px-0 text-[13px] text-heading outline-none placeholder:text-muted ${inputClassName}`.trim()}
+        className={`w-full bg-transparent px-0 text-type-field text-heading outline-none placeholder:text-muted ${inputClassName}`.trim()}
         ref={inputRef}
         {...props}
       />
@@ -118,10 +118,10 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
     <section className="space-y-3">
       <div>
         <FieldLabel>Header Image</FieldLabel>
-        <div className="mt-2 rounded-[24px] border border-divider bg-card p-2.5">
+        <div className="mt-2 rounded-dialog border border-divider bg-card p-2.5">
           <div className="relative">
             <label
-              className="group relative flex h-[176px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-[20px] bg-footer text-muted transition hover:brightness-[0.98]"
+              className="group relative flex h-[176px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-panel bg-footer text-muted transition hover:brightness-[0.98]"
               htmlFor={headerImageInputId}
               title={draft.heroImageUrl ? 'Change header image' : 'Upload header image'}
             >
@@ -134,7 +134,7 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
               ) : (
                 <span className="flex flex-col items-center gap-3 px-4 text-center">
                   <LuImage aria-hidden="true" className="h-9 w-9" />
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-heading">
+                  <span className="text-type-caption uppercase tracking-label text-heading">
                     Upload
                   </span>
                 </span>
@@ -143,7 +143,7 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
             <div className="absolute bottom-3 right-3 flex items-center gap-2">
               <label
                 aria-label={draft.heroImageUrl ? 'Change header image' : 'Upload header image'}
-                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/85 text-slate-700 shadow-sm backdrop-blur transition hover:bg-white hover:text-heading"
+                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-card/85 text-body shadow-sm backdrop-blur transition hover:bg-card hover:text-heading"
                 htmlFor={headerImageInputId}
                 title={draft.heroImageUrl ? 'Change image' : 'Upload image'}
               >
@@ -152,7 +152,7 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
               {draft.heroImageUrl ? (
                 <button
                   aria-label="Remove header image"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-slate-700 shadow-sm backdrop-blur transition hover:bg-white hover:text-error"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-card/85 text-body shadow-sm backdrop-blur transition hover:bg-card hover:text-error"
                   onClick={() => updateField('heroImageUrl', '')}
                   title="Remove image"
                   type="button"
@@ -190,7 +190,7 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
             dropHint=""
             onValueChange={(value) => updateField('description', value)}
             rows={3}
-            textareaClassName="min-h-20 text-[13px]"
+            textareaClassName="min-h-20 text-type-field"
             value={draft.description}
           />
         </div>
@@ -225,7 +225,7 @@ export default function EventDetailEditorCard({ draft, onChange, onSave }) {
 
       <div className="pt-1">
         <button
-          className="w-full rounded-full bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95"
+          className="w-full rounded-full bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-label text-card transition hover:brightness-95"
           onClick={onSave}
           type="button"
         >

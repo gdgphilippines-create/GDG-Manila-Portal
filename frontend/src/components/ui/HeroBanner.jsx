@@ -6,7 +6,7 @@ export default function HeroBanner({
   imageUrl,
   imageFit = 'cover',
 }) {
-  const frameClassName = framed ? 'rounded-[28px] border border-divider bg-card' : ''
+  const frameClassName = framed ? 'rounded-inner-card border border-divider bg-card' : ''
   const imageFitClassName = imageFit === 'contain' ? 'object-contain' : 'object-cover'
   const imageStyle = height == null ? undefined : { height: typeof height === 'number' ? `${height}px` : height }
 

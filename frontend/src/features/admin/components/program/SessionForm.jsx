@@ -123,7 +123,7 @@ function TypePicker({
     >
       {({ close }) => (
         <div className="space-y-3">
-          <p className="px-1 font-label text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+          <p className="px-1 font-label text-type-caption uppercase tracking-label text-muted">
             Session Type
           </p>
           <div className="flex flex-col gap-2">
@@ -133,7 +133,7 @@ function TypePicker({
 
               return (
                 <button
-                  className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${
+                  className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-label transition ${
                     isSelected ? tone.selected : tone.surface
                   }`.trim()}
                   key={typeOption.value}
@@ -158,7 +158,7 @@ function TypePicker({
 
           {sessionType === 'custom' && customSessionType.trim() ? (
             <button
-              className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${customTypeTone.selected}`.trim()}
+              className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-label transition ${customTypeTone.selected}`.trim()}
               onClick={() => {
                 setCustomTypeDraft(customSessionType)
                 setIsAddingCustomType(true)
@@ -583,7 +583,7 @@ export default function SessionForm({
 
         <div className="flex gap-2 sm:justify-self-end">
           <button
-            className="w-full whitespace-nowrap rounded-full bg-primary px-7 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95 sm:w-auto"
+            className="w-full whitespace-nowrap rounded-full bg-primary px-7 py-2 text-xs font-semibold uppercase tracking-label text-card transition hover:brightness-95 sm:w-auto"
             onClick={handleSave}
             type="button"
           >

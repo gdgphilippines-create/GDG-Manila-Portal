@@ -66,7 +66,37 @@ export const tonePatterns = {
     success: 'bg-success-bg text-success border-success/20',
     warning: 'bg-warning/15 text-warning border-warning/20',
     danger: 'bg-error-bg text-error border-error/20',
-    neutral: 'bg-slate-50 text-muted border-divider',
+    neutral: 'bg-footer text-muted border-divider',
+  },
+}
+
+export const streamStatusClassNames = {
+  waiting: {
+    active: 'border-divider bg-footer text-body',
+    inactive: 'border-transparent bg-transparent text-muted hover:text-body',
+  },
+  live: {
+    active: 'border-success-border/30 bg-success-bg text-success',
+    inactive: 'border-transparent bg-transparent text-muted hover:text-success',
+  },
+  ended: {
+    active: 'border-error-border/30 bg-error-bg text-error',
+    inactive: 'border-transparent bg-transparent text-muted hover:text-error',
+  },
+}
+
+export const headerStatusClassNames = {
+  warning: {
+    className: 'border-divider bg-footer text-body',
+  },
+  success: {
+    className: 'border-success-border/30 bg-success-bg text-success',
+  },
+  danger: {
+    className: 'border-error-border/30 bg-error-bg text-error',
+  },
+  neutral: {
+    className: 'border-divider bg-footer text-body',
   },
 }
 

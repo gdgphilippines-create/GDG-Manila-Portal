@@ -19,7 +19,7 @@ export default function EventHeader({
         <button
           aria-expanded={isDescriptionExpanded}
           aria-label={toggleDescriptionLabel}
-          className="mt-6 inline-flex h-11 w-11 items-center justify-center rounded-full border border-divider bg-white text-muted transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+          className="mt-6 inline-flex h-11 w-11 items-center justify-center rounded-full border border-divider bg-card text-muted transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
           onClick={onToggleDescription}
           type="button"
         >

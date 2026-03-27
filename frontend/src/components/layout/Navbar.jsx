@@ -20,7 +20,7 @@ function ProfileAvatar({ name }) {
     : '?'
 
   return (
-    <span className="flex h-10 w-10 items-center justify-center rounded-avatar border border-divider bg-slate-100 text-sm font-semibold text-heading shadow-[0_1px_3px_rgba(15,23,42,0.12),0_1px_2px_rgba(15,23,42,0.08)] transition-colors duration-200">
+    <span className="flex h-10 w-10 items-center justify-center rounded-avatar border border-divider bg-footer text-sm font-semibold text-heading shadow-avatar transition-colors duration-200">
       {initials || '?'}
     </span>
   )
@@ -71,9 +71,9 @@ export default function Navbar({ contentWidthClassName = 'max-w-content' }) {
   }, [])
 
   const headerClassName = [
-    'fixed inset-x-0 top-0 z-40 border-b border-divider supports-[backdrop-filter]:bg-white/85',
+    'fixed inset-x-0 top-0 z-40 border-b border-divider supports-[backdrop-filter]:bg-card/85',
     'transition-transform duration-300 ease-out will-change-transform',
-    isScrolled ? 'bg-white/95 shadow-[0_10px_30px_rgba(15,23,42,0.08)] backdrop-blur-sm' : 'bg-white/75',
+    isScrolled ? 'bg-card/95 shadow-nav-scrolled backdrop-blur-sm' : 'bg-card/75',
     isVisible ? 'translate-y-0' : '-translate-y-full',
   ].join(' ')
 
@@ -106,7 +106,7 @@ export default function Navbar({ contentWidthClassName = 'max-w-content' }) {
         <div className="justify-self-end">
           <Popover
             align="right"
-            className="w-72 border border-divider bg-white p-0 shadow-none"
+            className="w-72 border border-divider bg-card p-0 shadow-none"
             trigger={
               <button
                 aria-label={navbarCopy.profileMenuAriaLabel}
@@ -118,7 +118,7 @@ export default function Navbar({ contentWidthClassName = 'max-w-content' }) {
             }
           >
             {({ close }) => (
-              <div role="menu" className="overflow-hidden rounded-dialog bg-white">
+              <div role="menu" className="overflow-hidden rounded-dialog bg-card">
                 {user ? (
                   <div className="border-b border-divider px-4 py-3">
                     <p className="text-sm font-semibold text-heading">{displayName}</p>

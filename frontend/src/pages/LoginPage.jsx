@@ -39,10 +39,10 @@ export default function LoginPage() {
         <GlassPanel className="mx-auto w-full" variant="auth">
           <div className="px-8 py-10 md:px-12">
             <div className="text-center">
-              <h1 className="text-[2rem] font-normal leading-tight tracking-[-0.03em] text-heading">
+              <h1 className="text-type-heading-md leading-tight tracking-[-0.03em] text-heading">
                 Sign in
               </h1>
-              <p className="mt-3 text-[0.95rem] leading-6 text-body">
+              <p className="mt-3 text-type-field-md leading-6 text-body">
                 Use your registered email to continue to the portal.
               </p>
             </div>
@@ -54,7 +54,7 @@ export default function LoginPage() {
                   autoComplete="email"
                   icon={LuMail}
                   inputMode="email"
-                  inputClassName="text-[0.95rem]"
+                  inputClassName="text-type-field-md"
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="name@example.com"
                   type="email"

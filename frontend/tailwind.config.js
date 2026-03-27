@@ -20,6 +20,7 @@ export default {
         pill: layout.radius.pill,
         card: layout.radius.card,
         dialog: layout.radius.dialog,
+        'inner-card': layout.radius.innerCard,
         logo: layout.radius.logo,
         button: layout.radius.button,
         avatar: layout.radius.avatar,
@@ -31,6 +32,12 @@ export default {
         auth: layout.shadow.auth,
         cta: layout.shadow.cta,
         timeline: layout.shadow.timeline,
+        avatar: layout.shadow.avatar,
+        'nav-scrolled': layout.shadow.navScrolled,
+        toast: layout.shadow.toast,
+        'action-primary': layout.shadow.actionPrimary,
+        'action-success': layout.shadow.actionSuccess,
+        'action-neutral': layout.shadow.actionNeutral,
       },
       maxWidth: {
         content: layout.content.max,
@@ -49,6 +56,13 @@ export default {
       },
       backdropBlur: {
         frosted: layout.blur.frosted,
+      },
+      letterSpacing: {
+        label: typography.tracking.label,
+        'label-wide': typography.tracking.labelWide,
+        'label-narrow': typography.tracking.labelNarrow,
+        'label-extra-wide': typography.tracking.labelExtraWide,
+        'label-mid': typography.tracking.labelMid,
       },
       colors: {
         primary: 'rgb(var(--theme-primary) / <alpha-value>)',

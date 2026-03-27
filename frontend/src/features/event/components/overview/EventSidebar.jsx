@@ -4,7 +4,7 @@ export default function EventSidebar({ dateRange, location }) {
   return (
     <aside className="lg:col-span-4" data-purpose="event-sidebar">
       <div className="border-t border-divider pt-6 lg:border-t-0 lg:border-l lg:pl-6 lg:pt-0">
-        <p className="font-label text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+        <p className="font-label text-xs font-semibold uppercase tracking-label-wide text-muted">
           Event Details
         </p>
         <div className="mt-4 space-y-3">

@@ -1,7 +1,7 @@
 const variantClassNames = {
   card: 'rounded-card border border-divider',
   dialog: 'surface-dialog rounded-dialog shadow-dropdown',
-  auth: 'surface-auth rounded-[28px] border border-divider shadow-none',
+  auth: 'surface-auth rounded-inner-card border border-divider shadow-none',
 }
 
 export default function GlassPanel({ children, className = '', variant = 'card' }) {
