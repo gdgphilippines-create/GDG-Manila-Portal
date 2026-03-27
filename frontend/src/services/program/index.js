@@ -6,6 +6,7 @@ import { programSessions as initialSessions } from '@/lib/programSessionData'
 import { emptySession, normalizeSession, sortSessions } from '@/lib/programSessionUtils'
 
 const PROGRAM_POLL_INTERVAL_MS = 15000
+const EVENT_DESCRIPTION_PREVIEW_MAX_LENGTH = 220
 
 let inMemoryEventDraft = null
 
@@ -90,6 +91,23 @@ function toUiTimeLabel(value) {
   }
 
   return rawValue
+}
+
+function buildDescriptionPreview(value) {
+  const normalizedValue = String(value || '').replace(/\s+/g, ' ').trim()
+
+  if (!normalizedValue) {
+    return ''
+  }
+
+  if (normalizedValue.length <= EVENT_DESCRIPTION_PREVIEW_MAX_LENGTH) {
+    return normalizedValue
+  }
+
+  const truncatedValue = normalizedValue.slice(0, EVENT_DESCRIPTION_PREVIEW_MAX_LENGTH)
+  const lastWordBoundary = truncatedValue.lastIndexOf(' ')
+
+  return `${(lastWordBoundary > 0 ? truncatedValue.slice(0, lastWordBoundary) : truncatedValue).trim()}...`
 }
 
 function toBackendSessionData(session) {
@@ -201,13 +219,15 @@ function mergeProgramUpdate(programState) {
 }
 
 export function buildProgramEventMeta(eventDraft) {
+  const fullDescription = String(eventDraft.description || '').trim()
+
   return {
     ...programCopy,
     title: eventDraft.title,
     heroImageUrl: eventDraft.heroImageUrl,
     heroImageAlt: `${eventDraft.title} Banner`,
-    description: eventDraft.description,
-    fullDescription: eventDraft.description,
+    description: buildDescriptionPreview(fullDescription),
+    fullDescription,
     eventDetails: {
       ...programCopy.eventDetails,
       venue: eventDraft.location,

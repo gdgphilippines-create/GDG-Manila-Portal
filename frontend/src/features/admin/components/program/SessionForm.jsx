@@ -1,64 +1,22 @@
-import { useId, useMemo, useState } from 'react'
-import { FormField, IconInput, Popover, SectionCard, TextInput, Textarea } from '@/components/ui'
+import { useEffect, useId, useMemo, useState } from 'react'
+import { FormField, Popover, SectionCard, TextDropTextarea, TextInput } from '@/components/ui'
 import {
-  LuCalendarDays,
   LuCheck,
-  LuClock3,
   LuChevronDown,
+  LuCode,
   LuImage,
   LuLink2,
   LuPlus,
   LuTrash2,
-  LuUserRound,
 } from 'react-icons/lu'
 import {
-  addAction,
   builtInSessionTypes,
+  createAction,
+  getSessionTypeTone,
   normalizeSession,
   removeActionById,
   updateActionById,
 } from './sessionFormUtils'
-
-function formatSessionDateForInput(dateLabel) {
-  if (!dateLabel) {
-    return ''
-  }
-
-  const parsedDate = new Date(`${dateLabel}, ${new Date().getFullYear()}`)
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return ''
-  }
-
-  const year = parsedDate.getFullYear()
-  const month = String(parsedDate.getMonth() + 1).padStart(2, '0')
-  const day = String(parsedDate.getDate()).padStart(2, '0')
-
-  return `${year}-${month}-${day}`
-}
-
-function formatSessionDateForDisplay(value) {
-  if (!value) {
-    return { dateLabel: '', dayLabel: '' }
-  }
-
-  const [year, month, day] = value.split('-').map(Number)
-  const parsedDate = new Date(year, (month ?? 1) - 1, day ?? 1)
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return { dateLabel: '', dayLabel: '' }
-  }
-
-  return {
-    dateLabel: parsedDate.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-    }),
-    dayLabel: parsedDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-    }),
-  }
-}
 
 function formatTimeForInput(value) {
   const match = String(value || '').trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
@@ -108,43 +66,76 @@ function getSelectedTypeLabel(sessionType, customSessionType) {
     : getTypeOptionLabel(builtInSessionTypes[0])
 }
 
-function TypePicker({ hasError = false, customSessionType = '', sessionType, onSelect }) {
+function TypePicker({
+  hasError = false,
+  customSessionType = '',
+  sessionType,
+  onSelect,
+  onSubmitCustomType,
+}) {
   const selectedLabel = getSelectedTypeLabel(sessionType, customSessionType)
+  const selectedTone = getSessionTypeTone(sessionType, customSessionType)
+  const customTypeTone = getSessionTypeTone('custom', customSessionType)
+  const [customTypeDraft, setCustomTypeDraft] = useState(customSessionType)
+  const [isAddingCustomType, setIsAddingCustomType] = useState(false)
+
+  useEffect(() => {
+    setCustomTypeDraft(customSessionType)
+  }, [customSessionType])
+
+  function handleCustomTypeSubmit(close) {
+    const nextValue = customTypeDraft.trim()
+
+    if (!nextValue) {
+      return
+    }
+
+    onSubmitCustomType(nextValue)
+    setIsAddingCustomType(false)
+    close()
+  }
 
   return (
     <Popover
       align="left"
-      className="w-[min(20rem,calc(100vw-3rem))] p-3"
+      className="w-[min(16rem,calc(100vw-2rem))] p-3"
       trigger={(
         <button
           className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm transition hover:border-primary/30 ${
             hasError
               ? 'border-error bg-card text-heading'
-              : 'border-primary/20 bg-primary/5 text-heading'
-          }`}
+              : selectedTone.trigger
+          }`.trim()}
           type="button"
         >
-          <span className="text-sm font-medium text-heading">{selectedLabel}</span>
-          <LuChevronDown aria-hidden="true" className="h-4 w-4 text-muted" />
+          <span className="flex min-w-0 items-center gap-2">
+            <span
+              aria-hidden="true"
+              className={`h-2.5 w-2.5 rounded-full ${selectedTone.dot}`.trim()}
+            />
+            <span className="truncate whitespace-nowrap text-sm font-medium text-heading">
+              {selectedLabel}
+            </span>
+          </span>
+          <LuChevronDown aria-hidden="true" className="h-4 w-4 text-current/70" />
         </button>
       )}
     >
       {({ close }) => (
-        <div className="space-y-2">
+        <div className="space-y-3">
           <p className="px-1 font-label text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
             Session Type
           </p>
-          <div className="flex flex-wrap gap-2">
-            {builtInSessionTypes.map((typeOption) => {
+          <div className="flex flex-col gap-2">
+            {builtInSessionTypes.filter((typeOption) => typeOption.value !== 'custom').map((typeOption) => {
               const isSelected = typeOption.value === sessionType
+              const tone = getSessionTypeTone(typeOption.value)
 
               return (
                 <button
-                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${
-                    isSelected
-                      ? 'border-primary/30 bg-primary/10 text-primary'
-                      : 'border-divider bg-card text-heading hover:border-primary/30 hover:text-primary'
-                  }`}
+                  className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${
+                    isSelected ? tone.selected : tone.surface
+                  }`.trim()}
                   key={typeOption.value}
                   onClick={() => {
                     onSelect(typeOption.value)
@@ -152,11 +143,72 @@ function TypePicker({ hasError = false, customSessionType = '', sessionType, onS
                   }}
                   type="button"
                 >
-                  {isSelected ? <LuCheck aria-hidden="true" className="h-3.5 w-3.5" /> : null}
-                  <span>{getTypeOptionLabel(typeOption)}</span>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className={`h-2 w-2 rounded-full ${tone.dot}`.trim()}
+                    />
+                    <span className="truncate">{getTypeOptionLabel(typeOption)}</span>
+                  </span>
+                  {isSelected ? <LuCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" /> : null}
                 </button>
               )
             })}
+          </div>
+
+          {sessionType === 'custom' && customSessionType.trim() ? (
+            <button
+              className={`inline-flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${customTypeTone.selected}`.trim()}
+              onClick={() => {
+                setCustomTypeDraft(customSessionType)
+                setIsAddingCustomType(true)
+              }}
+              type="button"
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className={`h-2 w-2 rounded-full ${customTypeTone.dot}`.trim()}
+                />
+                <span className="truncate">{customSessionType}</span>
+              </span>
+              <LuCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+            </button>
+          ) : null}
+
+          <div className="rounded-2xl border border-dashed border-divider bg-footer/60 p-2">
+            {isAddingCustomType ? (
+              <input
+                autoFocus
+                className="type-body w-full rounded-xl border border-divider bg-card px-3 py-2 text-sm text-heading outline-none transition focus:border-primary/35"
+                onChange={(event) => setCustomTypeDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault()
+                    handleCustomTypeSubmit(close)
+                  }
+
+                  if (event.key === 'Escape') {
+                    setIsAddingCustomType(false)
+                    setCustomTypeDraft(customSessionType)
+                  }
+                }}
+                placeholder="Type a custom tag and press Enter"
+                value={customTypeDraft}
+              />
+            ) : (
+              <button
+                className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-sm font-medium text-muted transition hover:bg-card hover:text-heading"
+                onClick={() => {
+                  setCustomTypeDraft(customSessionType)
+                  setIsAddingCustomType(true)
+                }}
+                type="button"
+              >
+                <LuPlus aria-hidden="true" className="h-4 w-4" />
+                <span className="whitespace-nowrap">Tag</span>
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -164,22 +216,25 @@ function TypePicker({ hasError = false, customSessionType = '', sessionType, onS
   )
 }
 
-function ResourceRow({ error, href, kind, onChange, onRemove }) {
+function ResourceRow({ error, href, icon, placeholder, onChange, onRemove }) {
+  const ResourceIcon = icon
+
   return (
-    <div className={`rounded-2xl border p-3 ${error ? 'border-error' : 'border-divider'} bg-card`}>
-      <div className="flex items-center gap-3">
-        <span className="inline-flex items-center gap-2 rounded-full bg-footer px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-heading">
-          <LuLink2 aria-hidden="true" className="h-3.5 w-3.5" />
-          <span>{kind}</span>
-        </span>
-        <TextInput
-          hasError={Boolean(error)}
+    <div>
+      <div
+        className={`flex items-center gap-3 border-b bg-transparent py-2 ${
+          error ? 'border-error' : 'border-divider'
+        }`}
+      >
+        <ResourceIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-muted" />
+        <input
+          className="type-body w-full bg-transparent text-heading outline-none placeholder:text-muted"
           onChange={onChange}
-          placeholder={`Paste ${kind.toLowerCase()} link`}
+          placeholder={placeholder}
           value={href}
         />
         <button
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-divider text-muted transition hover:text-error"
+          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition hover:text-error"
           onClick={onRemove}
           type="button"
         >
@@ -195,16 +250,8 @@ function validateSession(session) {
   const errors = {}
   const isBreak = session.sessionType === 'break'
 
-  if (!session.schedule?.dateLabel?.trim()) {
-    errors.dateLabel = 'Date is required.'
-  }
-
   if (!isBreak && !session.speakerName?.trim()) {
     errors.speakerName = 'Speaker name is required.'
-  }
-
-  if (!isBreak && !session.speakerRole?.trim()) {
-    errors.speakerRole = 'Speaker role is required.'
   }
 
   if (!session.schedule?.startTime?.trim()) {
@@ -227,11 +274,24 @@ function validateSession(session) {
     errors.title = 'Session title is required.'
   }
 
-  if (!session.description?.trim()) {
-    errors.description = 'Description is required.'
+  return errors
+}
+
+function findResourceAction(session, labelKey) {
+  return (session.actions ?? []).find((action) => action.labelKey === labelKey) ?? createAction(labelKey, { href: '' })
+}
+
+function upsertResourceAction(session, labelKey, href) {
+  const existingAction = (session.actions ?? []).find((action) => action.labelKey === labelKey)
+
+  if (existingAction) {
+    return updateActionById(session, existingAction.id, href)
   }
 
-  return errors
+  return {
+    ...session,
+    actions: [...(session.actions ?? []), createAction(labelKey, { href })],
+  }
 }
 
 export default function SessionForm({
@@ -247,10 +307,28 @@ export default function SessionForm({
   const speakerImageInputId = useId()
   const [touched, setTouched] = useState(false)
   const normalizedSession = normalizeSession(session)
+  const slidesAction = findResourceAction(normalizedSession, 'slides')
+  const codelabAction = findResourceAction(normalizedSession, 'startCodelab')
   const errors = useMemo(
     () => (touched ? validateSession(normalizedSession) : {}),
     [normalizedSession, touched],
   )
+
+  useEffect(() => {
+    if (!onCancel) {
+      return undefined
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onCancel()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onCancel])
 
   function updateSession(nextSession) {
     onChange(normalizeSession(nextSession))
@@ -273,16 +351,21 @@ export default function SessionForm({
     })
   }
 
-  function updateResource(actionId, href) {
-    updateSession(updateActionById(normalizedSession, actionId, href))
-  }
-
   function handleTypeChange(value) {
     updateSession({
       ...normalizedSession,
       customSessionType: value === 'custom' ? normalizedSession.customSessionType : '',
       sessionType: value,
       type: value === 'break' ? 'break' : 'session',
+    })
+  }
+
+  function handleCustomTypeSubmit(value) {
+    updateSession({
+      ...normalizedSession,
+      customSessionType: value,
+      sessionType: 'custom',
+      type: 'session',
     })
   }
 
@@ -315,159 +398,8 @@ export default function SessionForm({
   }
 
   return (
-    <div className="space-y-6 p-5">
-        <SectionCard framed={false} title="Speaker">
-          <div className="grid gap-5 md:grid-cols-[112px_minmax(0,1fr)] md:items-start">
-            <div>
-              <label
-                className="group relative flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-[24px] border border-divider bg-card text-muted transition hover:border-primary/30 hover:text-primary"
-                htmlFor={speakerImageInputId}
-              >
-                {normalizedSession.speakerImageUrl ? (
-                  <>
-                    <img
-                      alt={normalizedSession.speakerName ? `${normalizedSession.speakerName} profile` : 'Speaker profile'}
-                      className="h-full w-full object-cover transition duration-200 group-hover:scale-[1.02] group-hover:opacity-30"
-                      src={normalizedSession.speakerImageUrl}
-                    />
-                    <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-neutral/40 opacity-0 transition group-hover:opacity-100">
-                      <LuPlus aria-hidden="true" className="h-5 w-5 text-card" />
-                      <span className="font-label text-[11px] font-semibold uppercase tracking-[0.14em] text-card">
-                        Change Photo
-                      </span>
-                    </span>
-                  </>
-                ) : (
-                  <span className="flex flex-col items-center gap-2 px-3 text-center">
-                    <LuImage aria-hidden="true" className="h-8 w-8" />
-                    <span className="font-label text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
-                      Click to Upload
-                    </span>
-                  </span>
-                )}
-              </label>
-              <input
-                accept="image/*"
-                className="sr-only"
-                id={speakerImageInputId}
-                onChange={handleSpeakerImageUpload}
-                type="file"
-              />
-              {normalizedSession.speakerImageUrl ? (
-                <div className="mt-3">
-                  <button
-                    className="inline-flex items-center gap-2 rounded-full border border-divider px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-heading transition hover:border-error/30 hover:text-error"
-                    onClick={() => updateField('speakerImageUrl', '')}
-                    type="button"
-                  >
-                    <LuTrash2 aria-hidden="true" className="h-3.5 w-3.5" />
-                    <span>Remove</span>
-                  </button>
-                </div>
-              ) : null}
-            </div>
-
-            <div className="grid gap-4">
-              <FormField error={errors.speakerName} label="Speaker Name">
-                <IconInput
-                  hasError={Boolean(errors.speakerName)}
-                  icon={LuUserRound}
-                  onChange={(event) => updateField('speakerName', event.target.value)}
-                  placeholder="Enter speaker name"
-                  value={normalizedSession.speakerName ?? ''}
-                />
-              </FormField>
-
-              <FormField error={errors.speakerRole} label="Role">
-                <TextInput
-                  hasError={Boolean(errors.speakerRole)}
-                  onChange={(event) => updateField('speakerRole', event.target.value)}
-                  placeholder="Enter speaker role"
-                  value={normalizedSession.speakerRole ?? ''}
-                />
-              </FormField>
-            </div>
-          </div>
-        </SectionCard>
-
-        <div className="border-t border-divider/70" />
-
-        <SectionCard framed={false} title="Schedule">
-          <div className="grid gap-4">
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_14rem]">
-              <div className="grid gap-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)]">
-                <FormField error={errors.dateLabel} label="Date">
-                  <IconInput
-                    hasError={Boolean(errors.dateLabel)}
-                    icon={LuCalendarDays}
-                    inputClassName="appearance-none"
-                    onChange={(event) => {
-                      const nextDate = formatSessionDateForDisplay(event.target.value)
-                      updateSession({
-                        ...normalizedSession,
-                        schedule: {
-                          ...normalizedSession.schedule,
-                          dateLabel: nextDate.dateLabel,
-                          dayLabel: nextDate.dayLabel,
-                        },
-                      })
-                    }}
-                    type="date"
-                    value={formatSessionDateForInput(normalizedSession.schedule.dateLabel)}
-                  />
-                </FormField>
-
-                <FormField error={errors.startTime} label="Start Time">
-                  <IconInput
-                    hasError={Boolean(errors.startTime)}
-                    icon={LuClock3}
-                    inputClassName="appearance-none"
-                    onChange={(event) => updateSchedule('startTime', formatTimeForDisplay(event.target.value))}
-                    type="time"
-                    value={formatTimeForInput(normalizedSession.schedule.startTime)}
-                  />
-                </FormField>
-
-                <FormField error={errors.endTime} label="End Time">
-                  <IconInput
-                    hasError={Boolean(errors.endTime)}
-                    icon={LuClock3}
-                    inputClassName="appearance-none"
-                    onChange={(event) => updateSchedule('endTime', formatTimeForDisplay(event.target.value))}
-                    type="time"
-                    value={formatTimeForInput(normalizedSession.schedule.endTime)}
-                  />
-                </FormField>
-              </div>
-
-              <FormField error={errors.sessionType} label="Type">
-                <div className="space-y-3">
-                  <TypePicker
-                    customSessionType={normalizedSession.customSessionType}
-                    hasError={Boolean(errors.sessionType)}
-                    onSelect={handleTypeChange}
-                    sessionType={normalizedSession.sessionType}
-                  />
-                  {normalizedSession.sessionType === 'custom' ? (
-                    <TextInput
-                      hasError={Boolean(errors.customSessionType)}
-                      onChange={(event) => updateField('customSessionType', event.target.value)}
-                      placeholder="Type a new session category"
-                      value={normalizedSession.customSessionType ?? ''}
-                    />
-                  ) : null}
-                </div>
-              </FormField>
-            </div>
-            {errors.customSessionType && normalizedSession.sessionType === 'custom' ? (
-              <p className="text-sm text-error">{errors.customSessionType}</p>
-            ) : null}
-          </div>
-        </SectionCard>
-
-        <div className="border-t border-divider/70" />
-
-        <SectionCard framed={false} title="Session Details">
+    <div className="space-y-4 p-4">
+        <SectionCard framed={false}>
           <div className="grid gap-4">
             <FormField error={errors.title} label="Session Title">
               <TextInput
@@ -478,11 +410,14 @@ export default function SessionForm({
               />
             </FormField>
 
-            <FormField error={errors.description} label="Description">
-              <Textarea
+            <FormField error={errors.description} label="Description (Optional)">
+              <TextDropTextarea
+                dropHint=""
                 hasError={Boolean(errors.description)}
-                onChange={(event) => updateField('description', event.target.value)}
+                onValueChange={(value) => updateField('description', value)}
                 placeholder="Write a short session description"
+                rows={3}
+                textareaClassName="min-h-20"
                 value={normalizedSession.description ?? ''}
               />
             </FormField>
@@ -491,79 +426,164 @@ export default function SessionForm({
 
         <div className="border-t border-divider/70" />
 
-        <SectionCard framed={false} title="Resources">
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                Resource Links
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  className="inline-flex items-center gap-2 rounded-full border border-divider px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-heading transition hover:border-primary/30 hover:text-primary"
-                  onClick={() => updateSession(addAction(normalizedSession, 'slides', ''))}
-                  type="button"
-                >
-                  <LuPlus aria-hidden="true" className="h-3.5 w-3.5" />
-                  <span>Slides</span>
-                </button>
-                <button
-                  className="inline-flex items-center gap-2 rounded-full border border-divider px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-heading transition hover:border-primary/30 hover:text-primary"
-                  onClick={() => updateSession(addAction(normalizedSession, 'startCodelab', ''))}
-                  type="button"
-                >
-                  <LuPlus aria-hidden="true" className="h-3.5 w-3.5" />
-                  <span>Codelab</span>
-                </button>
+        <SectionCard framed={false}>
+          <div className="grid gap-3">
+            <div className="flex flex-wrap items-start gap-3">
+              <div className="min-w-0 flex-none basis-[8.5rem]">
+                <FormField error={errors.startTime} label="Start Time">
+                  <TextInput
+                    className="min-w-0 whitespace-nowrap appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                    hasError={Boolean(errors.startTime)}
+                    onChange={(event) => updateSchedule('startTime', formatTimeForDisplay(event.target.value))}
+                    type="time"
+                    value={formatTimeForInput(normalizedSession.schedule.startTime)}
+                  />
+                </FormField>
+              </div>
+
+              <div className="min-w-0 flex-none basis-[8.5rem]">
+                <FormField error={errors.endTime} label="End Time">
+                  <TextInput
+                    className="min-w-0 whitespace-nowrap appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                    hasError={Boolean(errors.endTime)}
+                    onChange={(event) => updateSchedule('endTime', formatTimeForDisplay(event.target.value))}
+                    type="time"
+                    value={formatTimeForInput(normalizedSession.schedule.endTime)}
+                  />
+                </FormField>
+              </div>
+
+              <div className="min-w-0 flex-none basis-[11rem]">
+                <FormField error={errors.sessionType} label="Type">
+                  <div className="space-y-3">
+                    <TypePicker
+                      customSessionType={normalizedSession.customSessionType}
+                      hasError={Boolean(errors.sessionType)}
+                      onSelect={handleTypeChange}
+                      onSubmitCustomType={handleCustomTypeSubmit}
+                      sessionType={normalizedSession.sessionType}
+                    />
+                  </div>
+                </FormField>
               </div>
             </div>
-
-            {(normalizedSession.actions ?? []).length ? (
-              <div className="space-y-3">
-                {(normalizedSession.actions ?? []).map((action) => (
-                  <ResourceRow
-                    error={errors[`resource:${action.id}`]}
-                    href={action.href ?? ''}
-                    key={action.id}
-                    kind={action.labelKey === 'slides' ? 'Slides' : action.labelKey === 'startCodelab' ? 'Codelab' : action.labelKey}
-                    onChange={(event) => updateResource(action.id, event.target.value)}
-                    onRemove={() => updateSession(removeActionById(normalizedSession, action.id))}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted">No resources added yet.</p>
-            )}
+            {errors.customSessionType && normalizedSession.sessionType === 'custom' ? (
+              <p className="text-sm text-error">{errors.customSessionType}</p>
+            ) : null}
           </div>
         </SectionCard>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-divider/70 pt-5">
+        <div className="border-t border-divider/70" />
+
+        <SectionCard framed={false}>
+          <div className="space-y-2">
+            <div className="grid gap-3 md:grid-cols-[72px_minmax(0,1fr)] xl:grid-cols-[72px_minmax(0,1.15fr)_minmax(0,0.9fr)] md:items-center">
+              <div className="flex items-center gap-2">
+                <label
+                  className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-divider bg-card text-muted transition hover:border-primary/30 hover:text-primary"
+                  htmlFor={speakerImageInputId}
+                  title={normalizedSession.speakerImageUrl ? 'Change speaker photo' : 'Upload speaker photo'}
+                >
+                  {normalizedSession.speakerImageUrl ? (
+                    <>
+                      <img
+                        alt={normalizedSession.speakerName ? `${normalizedSession.speakerName} profile` : 'Speaker profile'}
+                        className="h-full w-full object-cover transition group-hover:opacity-30"
+                        src={normalizedSession.speakerImageUrl}
+                      />
+                      <span className="absolute inset-0 bg-error/40 opacity-0 transition group-hover:opacity-100" />
+                    </>
+                  ) : (
+                    <LuImage aria-hidden="true" className="h-4.5 w-4.5" />
+                  )}
+                  {normalizedSession.speakerImageUrl ? (
+                    <button
+                      aria-label="Remove speaker photo"
+                      className="absolute inset-0 inline-flex items-center justify-center text-card opacity-0 transition group-hover:opacity-100"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        event.stopPropagation()
+                        updateField('speakerImageUrl', '')
+                      }}
+                      title="Remove speaker photo"
+                      type="button"
+                    >
+                      <LuTrash2 aria-hidden="true" className="h-4 w-4" />
+                    </button>
+                  ) : null}
+                </label>
+                <input
+                  accept="image/*"
+                  className="sr-only"
+                  id={speakerImageInputId}
+                  onChange={handleSpeakerImageUpload}
+                  type="file"
+                />
+              </div>
+
+              <TextInput
+                hasError={Boolean(errors.speakerName)}
+                onChange={(event) => updateField('speakerName', event.target.value)}
+                placeholder="Speaker name"
+                value={normalizedSession.speakerName ?? ''}
+              />
+
+              <div className="flex items-center gap-2 md:col-start-2 xl:col-start-auto">
+                <TextInput
+                  hasError={Boolean(errors.speakerRole)}
+                  onChange={(event) => updateField('speakerRole', event.target.value)}
+                  placeholder="Role"
+                  value={normalizedSession.speakerRole ?? ''}
+                />
+              </div>
+            </div>
+
+            {errors.speakerName ? <p className="text-sm text-error">{errors.speakerName}</p> : null}
+          </div>
+        </SectionCard>
+
+        <div className="border-t border-divider/70" />
+
+        <SectionCard framed={false}>
+          <div className="space-y-2">
+            <ResourceRow
+              error={errors[`resource:${slidesAction.id}`]}
+              href={slidesAction.href ?? ''}
+              icon={LuLink2}
+              onChange={(event) => updateSession(upsertResourceAction(normalizedSession, 'slides', event.target.value))}
+              onRemove={() => updateSession(removeActionById(normalizedSession, slidesAction.id))}
+              placeholder="Slides link"
+            />
+            <ResourceRow
+              error={errors[`resource:${codelabAction.id}`]}
+              href={codelabAction.href ?? ''}
+              icon={LuCode}
+              onChange={(event) => updateSession(upsertResourceAction(normalizedSession, 'startCodelab', event.target.value))}
+              onRemove={() => updateSession(removeActionById(normalizedSession, codelabAction.id))}
+              placeholder="Codelab link"
+            />
+          </div>
+        </SectionCard>
+
+      <div className="mt-4 grid gap-3 border-t border-divider/70 pt-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center">
         <div className="flex gap-2">
           {onDelete ? (
             <button
-              className="inline-flex items-center gap-2 rounded-full border border-error/20 bg-error-bg px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-error transition hover:border-error/40"
+              aria-label="Delete session"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-error/20 bg-error-bg text-error transition hover:border-error/40"
               disabled={deleteDisabled}
               onClick={onDelete}
               title={deleteDisabled ? deleteTooltip : undefined}
               type="button"
             >
-              <LuTrash2 aria-hidden="true" className="h-3.5 w-3.5" />
-              <span>Delete</span>
+              <LuTrash2 aria-hidden="true" className="h-4 w-4" />
             </button>
           ) : null}
         </div>
 
-        <div className="flex gap-2">
-          {onCancel ? (
-            <button
-              className="rounded-full border border-divider px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-heading transition hover:border-primary/30 hover:text-primary"
-              onClick={onCancel}
-              type="button"
-            >
-              Cancel
-            </button>
-          ) : null}
+        <div className="flex gap-2 sm:justify-self-end">
           <button
-            className="rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95"
+            className="w-full whitespace-nowrap rounded-full bg-primary px-7 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95 sm:w-auto"
             onClick={handleSave}
             type="button"
           >

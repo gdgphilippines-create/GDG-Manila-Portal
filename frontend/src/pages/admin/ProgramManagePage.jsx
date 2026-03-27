@@ -1,25 +1,69 @@
 import { useEffect, useState } from 'react'
-import { LuPencil, LuPlus } from 'react-icons/lu'
-import { GlassPanel } from '@/components/ui'
-import { surfacePatterns } from '@/styles/layout'
+import { LuCircleOff, LuClock3, LuPencil, LuPlus, LuRadio } from 'react-icons/lu'
+import { adminActionsCopy } from '@/constants/admin'
+import { VIEW_STATES } from '@/constants'
+import { EventDetailEditorCard, SessionForm } from '@/features/admin'
 import { useOutletContext } from 'react-router-dom'
-import EventDetailEditorCard from '@/features/admin/components/event/EventDetailEditorCard'
-import SessionForm from '@/features/admin/components/program/SessionForm'
 import {
   emptySession,
   getSessionTypeLabel,
+  getSessionTypeTone,
   normalizeSession,
   sortSessions,
-  summarizeSession,
-} from '@/features/admin/components/program/sessionFormUtils'
+} from '@/lib/programSessionUtils'
+
+const streamStatusIcons = {
+  [VIEW_STATES.WAITING]: LuClock3,
+  [VIEW_STATES.LIVE]: LuRadio,
+  [VIEW_STATES.ENDED]: LuCircleOff,
+}
+
+const streamStatusClassNames = {
+  [VIEW_STATES.WAITING]: {
+    active: 'border-slate-300 bg-slate-100 text-slate-700',
+    inactive: 'border-transparent bg-transparent text-slate-500 hover:text-slate-700',
+  },
+  [VIEW_STATES.LIVE]: {
+    active: 'border-emerald-300 bg-emerald-100 text-emerald-800',
+    inactive: 'border-transparent bg-transparent text-slate-500 hover:text-emerald-700',
+  },
+  [VIEW_STATES.ENDED]: {
+    active: 'border-rose-300 bg-rose-100 text-rose-700',
+    inactive: 'border-transparent bg-transparent text-slate-500 hover:text-rose-700',
+  },
+}
+
+function groupSessionsByDate(sessions) {
+  return Object.values(
+    sortSessions(sessions).reduce((groups, session) => {
+      const groupId = `${session.schedule.dateLabel}-${session.schedule.dayLabel}`
+
+      if (!groups[groupId]) {
+        groups[groupId] = {
+          dayLabel: session.schedule.dayLabel,
+          dateLabel: session.schedule.dateLabel,
+          id: groupId.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          sessions: [],
+        }
+      }
+
+      groups[groupId].sessions.push(session)
+      return groups
+    }, {}),
+  )
+}
 
 export default function ProgramManagePage() {
   const {
+    currentView,
     eventDraft,
+    error,
+    isPending,
     programError,
     saveEventDraft,
     saveSessions,
     sessions,
+    updateView,
   } = useOutletContext()
   const [addingNew, setAddingNew] = useState(false)
   const [editingSessionId, setEditingSessionId] = useState(null)
@@ -30,6 +74,8 @@ export default function ProgramManagePage() {
   useEffect(() => {
     setEventEditDraft(eventDraft)
   }, [eventDraft])
+
+  const groupedSessions = groupSessionsByDate(sessions)
 
   function handleAddSession() {
     setAddingNew(true)
@@ -75,35 +121,65 @@ export default function ProgramManagePage() {
     setEditingDraft(null)
   }
 
+  function beginEditingSession(session) {
+    setEditingSessionId((currentId) => (currentId === session.id ? null : session.id))
+    setEditingDraft(normalizeSession(session))
+    setAddingNew(false)
+  }
+
   return (
-    <div className="space-y-8">
-      <EventDetailEditorCard
-        draft={eventEditDraft}
-        onChange={setEventEditDraft}
-        onSave={() => saveEventDraft(eventEditDraft)}
-      />
+    <div className="grid items-start gap-8 lg:grid-cols-[minmax(20rem,1fr)_minmax(0,1fr)]">
+      <section className="space-y-4">
+        <EventDetailEditorCard
+          draft={eventEditDraft}
+          onChange={setEventEditDraft}
+          onSave={() => saveEventDraft(eventEditDraft)}
+        />
+      </section>
 
-      <GlassPanel variant="card">
-        <div className={surfacePatterns.panelBodyClassName}>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h2 className="font-display text-3xl font-semibold tracking-tight text-heading">
-                Program Schedule
-              </h2>
-            </div>
+      <section className="space-y-4 lg:border-l lg:border-divider/70 lg:pl-8">
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <div className="inline-flex flex-wrap items-center gap-1.5 rounded-full border border-divider bg-card/60 p-1">
+            {adminActionsCopy.map((action) => {
+              const Icon = streamStatusIcons[action.view] ?? LuClock3
+              const tone = streamStatusClassNames[action.view] ?? streamStatusClassNames[VIEW_STATES.WAITING]
+              const isActive = action.view === currentView
 
-            <button
-              aria-label="Add session"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-primary/30 bg-transparent text-primary transition hover:bg-primary hover:text-card"
-              onClick={handleAddSession}
-              type="button"
-            >
-              <LuPlus aria-hidden="true" className="h-5 w-5" />
-            </button>
+              return (
+                <button
+                  aria-pressed={isActive}
+                  className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                    isActive ? tone.active : tone.inactive
+                  }`.trim()}
+                  disabled={isPending}
+                  key={action.view}
+                  onClick={() => updateView(action.view)}
+                  type="button"
+                >
+                  <Icon aria-hidden="true" className="h-4 w-4" />
+                  <span>{action.label}</span>
+                  {isActive && action.view === VIEW_STATES.LIVE ? (
+                    <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-[pulse_1.5s_ease-in-out_infinite]" />
+                  ) : null}
+                </button>
+              )
+            })}
           </div>
+          <button
+            aria-label="Add session"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-primary/30 bg-transparent text-primary transition hover:bg-primary hover:text-card"
+            onClick={handleAddSession}
+            type="button"
+          >
+            <LuPlus aria-hidden="true" className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="space-y-4 lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:pr-2">
+          {error ? <p className="type-body text-error">{error}</p> : null}
 
           {addingNew ? (
-            <div className="mt-6">
+            <div className="rounded-[24px] border border-divider/80 bg-card/70">
               <SessionForm
                 onChange={setNewSession}
                 onCancel={() => {
@@ -117,68 +193,87 @@ export default function ProgramManagePage() {
             </div>
           ) : null}
 
-          <div className="mt-6 space-y-3">
-            {programError ? <p className="type-body text-error">{programError}</p> : null}
-            {sessions.map((session) => {
-              const isEditing = editingSessionId === session.id && editingDraft
+          {programError ? <p className="type-body text-error">{programError}</p> : null}
 
-              return (
-                <div className="rounded-[24px] border border-divider bg-card p-4" key={session.id}>
-                  {isEditing ? (
-                    <SessionForm
-                      onChange={setEditingDraft}
-                      onCancel={() => {
-                        setEditingSessionId(null)
-                        setEditingDraft(null)
-                      }}
-                      onDelete={() => handleDeleteSession(session.id)}
-                      deleteDisabled
-                      deleteTooltip="Delete not yet supported."
-                      onSave={() => handleSaveSession(session.id)}
-                      saveLabel="Save"
-                      session={editingDraft}
-                    />
-                  ) : (
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <div>
-                        <p className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                          {session.schedule.dateLabel} · {session.schedule.dayLabel}
-                        </p>
-                        <h3 className="mt-2 text-lg font-semibold text-heading">
-                          {session.title || 'Untitled session'}
-                        </h3>
-                        <p className="mt-1 text-sm text-body">
-                          {summarizeSession(session)} · {getSessionTypeLabel(session)}
-                        </p>
-                        {session.speakerName ? (
-                          <p className="mt-1 text-sm text-muted">
-                            {session.speakerName}{session.speakerRole ? ` · ${session.speakerRole}` : ''}
-                          </p>
-                        ) : null}
-                      </div>
-
-                      <div className="flex gap-2">
-                        <button
-                          aria-label="Edit session"
-                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-divider text-heading transition hover:border-primary/30 hover:text-primary"
-                          onClick={() => {
-                            setEditingSessionId((currentId) => (currentId === session.id ? null : session.id))
-                            setEditingDraft(normalizeSession(session))
-                            setAddingNew(false)
-                          }}
-                          type="button"
-                        >
-                          <LuPencil aria-hidden="true" className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  )}
+          <div className="space-y-6">
+            {groupedSessions.map((group) => (
+              <section className="space-y-2" key={group.id}>
+                <div className="sticky top-0 z-10 bg-[rgb(var(--color-bg-page))]/95 py-2 backdrop-blur-sm">
+                  <p className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                    {`${group.dateLabel} · ${group.dayLabel}`.toUpperCase()}
+                  </p>
                 </div>
-              )
-            })}
+
+                <div className="space-y-2">
+                  {group.sessions.map((session) => {
+                    const isEditing = editingSessionId === session.id && editingDraft
+                    const sessionTypeTone = getSessionTypeTone(session)
+                    const metadata = [
+                      session.speakerName
+                        ? `${session.speakerName}${session.speakerRole ? ` · ${session.speakerRole}` : ''}`
+                        : '',
+                      session.venue || '',
+                    ].filter(Boolean).join(' · ')
+
+                    return (
+                      <div className="rounded-[20px] border border-divider/80 bg-card/70" key={session.id}>
+                        {isEditing ? (
+                          <SessionForm
+                            onChange={setEditingDraft}
+                            onCancel={() => {
+                              setEditingSessionId(null)
+                              setEditingDraft(null)
+                            }}
+                            onDelete={() => handleDeleteSession(session.id)}
+                            deleteDisabled
+                            deleteTooltip="Delete not yet supported."
+                            onSave={() => handleSaveSession(session.id)}
+                            saveLabel="Save"
+                            session={editingDraft}
+                          />
+                        ) : (
+                          <button
+                            className="group flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-card"
+                            onClick={() => beginEditingSession(session)}
+                            type="button"
+                          >
+                            <div className="min-w-[112px] shrink-0 pt-0.5">
+                              <p className="text-[13px] font-normal leading-5 text-slate-600">
+                                {session.schedule.startTime}
+                              </p>
+                              <p className="text-[13px] font-normal leading-5 text-slate-600">
+                                {session.schedule.endTime}
+                              </p>
+                            </div>
+
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-sm font-semibold text-heading">
+                                {session.title || 'Untitled session'}
+                              </h3>
+                              <span
+                                className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${sessionTypeTone.badge}`.trim()}
+                              >
+                                {getSessionTypeLabel(session)}
+                              </span>
+                              {metadata ? (
+                                <p className="mt-1 text-sm text-muted">{metadata}</p>
+                              ) : null}
+                            </div>
+
+                            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition group-hover:text-primary">
+                              <LuPencil aria-hidden="true" className="h-4 w-4" />
+                            </span>
+                          </button>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            ))}
           </div>
         </div>
-      </GlassPanel>
+      </section>
     </div>
   )
 }

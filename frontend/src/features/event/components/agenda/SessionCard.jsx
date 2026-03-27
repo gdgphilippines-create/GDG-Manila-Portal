@@ -5,7 +5,7 @@ import {
   LuUserRound,
 } from 'react-icons/lu'
 import { programCopy } from '@/constants/program'
-import { getSessionTypeLabel, normalizeSession } from '@/lib/programSessionUtils'
+import { getSessionTypeLabel, getSessionTypeTone, normalizeSession } from '@/lib/programSessionUtils'
 
 function SessionActionButton({ action, label, onAction }) {
   const isPrimary = action.variant === 'primary'
@@ -44,22 +44,28 @@ function BreakActionButton({ action, label, onAction }) {
 export default function SessionCard({ onAction, session }) {
   const normalizedSession = normalizeSession(session)
   const timeLabel = `${normalizedSession.schedule.startTime} - ${normalizedSession.schedule.endTime}`
+  const sessionTypeTone = getSessionTypeTone(normalizedSession)
 
   if (normalizedSession.type === 'break') {
     const action = normalizedSession.actions?.[0]
     const label = action ? programCopy.actionLabels[action.labelKey] : null
 
     return (
-      <article className="rounded-[28px] border border-dashed border-warning/30 bg-warning-bg/90 p-8">
+      <article className="rounded-[24px] border border-divider bg-card px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
         <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-warning">
           {timeLabel}
         </span>
-        <h3 className="mt-2 text-2xl font-bold text-heading">{normalizedSession.title}</h3>
+        <h3 className="mt-1.5 text-xl font-bold text-heading">{normalizedSession.title}</h3>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] ${sessionTypeTone.badge}`.trim()}>
+            {getSessionTypeLabel(normalizedSession)}
+          </span>
+        </div>
         {normalizedSession.description ? (
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-body">{normalizedSession.description}</p>
+          <p className="mt-2.5 max-w-2xl text-sm leading-6 text-body">{normalizedSession.description}</p>
         ) : null}
         {action && label ? (
-          <div className="mt-6">
+          <div className="mt-4">
             <BreakActionButton action={action} label={label} onAction={onAction} />
           </div>
         ) : null}
@@ -68,19 +74,19 @@ export default function SessionCard({ onAction, session }) {
   }
 
   return (
-    <article className="rounded-[28px] border border-divider bg-card p-8">
+    <article className="rounded-[24px] border border-divider bg-card px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
       <span className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-primary">
         {timeLabel}
       </span>
-      <h3 className="mt-2 text-2xl font-bold text-heading">{normalizedSession.title}</h3>
+      <h3 className="mt-1.5 text-xl font-bold text-heading">{normalizedSession.title}</h3>
 
-      <div className="mt-2.5 flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-footer px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] text-heading">
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] ${sessionTypeTone.badge}`.trim()}>
           {getSessionTypeLabel(normalizedSession)}
         </span>
       </div>
 
-      <div className="mb-6 mt-3 space-y-2.5">
+      <div className="mb-4 mt-2.5 space-y-2">
         {normalizedSession.speakerName ? (
           <div className="flex items-center gap-2 text-sm leading-5 text-body">
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success-bg">
@@ -108,7 +114,7 @@ export default function SessionCard({ onAction, session }) {
       </div>
 
       {normalizedSession.actions?.length ? (
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-3">
           {normalizedSession.actions.map((action) => (
             <SessionActionButton
               action={action}

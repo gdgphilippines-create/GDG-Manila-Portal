@@ -10,6 +10,7 @@ const TOAST_EXIT_DURATION_MS = 200
 
 const toneDotClassNames = {
   info: 'bg-primary',
+  urgent: 'bg-error',
   success: 'bg-success',
   warning: 'bg-warning',
   error: 'bg-error',

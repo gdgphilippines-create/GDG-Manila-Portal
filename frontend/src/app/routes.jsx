@@ -6,7 +6,6 @@ import ProgramPage from '@/pages/ProgramPage'
 import AdminLayout from '@/pages/admin/AdminLayout'
 import OverviewPage from '@/pages/admin/OverviewPage'
 import ProgramManagePage from '@/pages/admin/ProgramManagePage'
-import StreamPage from '@/pages/admin/StreamPage'
 import AlertsPage from '@/pages/admin/AlertsPage'
 
 export const routes = [
@@ -42,7 +41,7 @@ export const routes = [
       },
       {
         path: 'stream',
-        element: <StreamPage />,
+        element: <Navigate replace to="/admin-panel/program" />,
       },
       {
         path: 'alerts',

@@ -1,7 +1,6 @@
-import { GlassPanel, FormField, IconInput, SectionCard, TextInput, Textarea } from '@/components/ui'
-import { LuCalendarDays, LuImage, LuMapPin } from 'react-icons/lu'
-import { adminOverviewLabels } from '@/constants/admin'
-import { surfacePatterns } from '@/styles/layout'
+import { createElement, useId, useRef } from 'react'
+import { TextDropTextarea } from '@/components/ui'
+import { LuCalendarDays, LuImage, LuMapPin, LuTrash2, LuUpload } from 'react-icons/lu'
 
 function formatDateForInput(value) {
   const parsedDate = new Date(value)
@@ -36,85 +35,203 @@ function formatDateForDisplay(value) {
   })
 }
 
+function FieldLabel({ children }) {
+  return (
+    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+      {children}
+    </span>
+  )
+}
+
+function UnderlineInput({ className = '', ...props }) {
+  return (
+    <input
+      className={`w-full border-b border-divider bg-transparent px-0 py-2 text-[13px] text-heading outline-none transition focus:border-primary placeholder:text-muted ${className}`.trim()}
+      {...props}
+    />
+  )
+}
+
+function UnderlineIconInput({
+  icon: Icon,
+  className = '',
+  inputClassName = '',
+  inputRef,
+  onContainerClick,
+  ...props
+}) {
+  return (
+    <div
+      className={`flex items-center gap-2.5 border-b border-divider py-2 transition focus-within:border-primary ${className}`.trim()}
+      onClick={onContainerClick}
+    >
+      {createElement(Icon, {
+        'aria-hidden': 'true',
+        className: 'h-4 w-4 shrink-0 text-slate-500',
+      })}
+      <input
+        className={`w-full bg-transparent px-0 text-[13px] text-heading outline-none placeholder:text-muted ${inputClassName}`.trim()}
+        ref={inputRef}
+        {...props}
+      />
+    </div>
+  )
+}
+
 export default function EventDetailEditorCard({ draft, onChange, onSave }) {
+  const headerImageInputId = useId()
+  const dateInputRef = useRef(null)
+
   function updateField(field, value) {
     onChange((currentDraft) => ({ ...currentDraft, [field]: value }))
   }
 
+  function handleHeaderImageUpload(event) {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        updateField('heroImageUrl', reader.result)
+      }
+    }
+    reader.readAsDataURL(file)
+    event.target.value = ''
+  }
+
+  function handleDateFieldClick() {
+    const input = dateInputRef.current
+
+    if (!input) {
+      return
+    }
+
+    input.focus()
+    input.showPicker?.()
+  }
+
   return (
-    <GlassPanel variant="card">
-      <div className={surfacePatterns.panelBodyClassName}>
-        <div className="mb-6">
-          <h2 className="text-[20px] font-semibold leading-7 text-heading">
-            {adminOverviewLabels.eventDetailTitle}
-          </h2>
-        </div>
-
-        <div className="space-y-6">
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.9fr)]">
-            <div className="grid gap-6">
-              <FormField label="Headline">
-                <TextInput
-                  onChange={(event) => updateField('title', event.target.value)}
-                  value={draft.title}
+    <section className="space-y-3">
+      <div>
+        <FieldLabel>Header Image</FieldLabel>
+        <div className="mt-2 rounded-[24px] border border-divider bg-card p-2.5">
+          <div className="relative">
+            <label
+              className="group relative flex h-[176px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-[20px] bg-footer text-muted transition hover:brightness-[0.98]"
+              htmlFor={headerImageInputId}
+              title={draft.heroImageUrl ? 'Change header image' : 'Upload header image'}
+            >
+              {draft.heroImageUrl ? (
+                <img
+                  alt={draft.title ? `${draft.title} banner` : 'Event header banner'}
+                  className="h-full w-full object-cover"
+                  src={draft.heroImageUrl}
                 />
-              </FormField>
-
-              <FormField label="Description">
-                <Textarea
-                  className="min-h-40"
-                  onChange={(event) => updateField('description', event.target.value)}
-                  value={draft.description}
-                />
-              </FormField>
+              ) : (
+                <span className="flex flex-col items-center gap-3 px-4 text-center">
+                  <LuImage aria-hidden="true" className="h-9 w-9" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-heading">
+                    Upload
+                  </span>
+                </span>
+              )}
+            </label>
+            <div className="absolute bottom-3 right-3 flex items-center gap-2">
+              <label
+                aria-label={draft.heroImageUrl ? 'Change header image' : 'Upload header image'}
+                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/85 text-slate-700 shadow-sm backdrop-blur transition hover:bg-white hover:text-heading"
+                htmlFor={headerImageInputId}
+                title={draft.heroImageUrl ? 'Change image' : 'Upload image'}
+              >
+                <LuUpload aria-hidden="true" className="h-4 w-4" />
+              </label>
+              {draft.heroImageUrl ? (
+                <button
+                  aria-label="Remove header image"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-slate-700 shadow-sm backdrop-blur transition hover:bg-white hover:text-error"
+                  onClick={() => updateField('heroImageUrl', '')}
+                  title="Remove image"
+                  type="button"
+                >
+                  <LuTrash2 aria-hidden="true" className="h-4 w-4" />
+                </button>
+              ) : null}
             </div>
-
-            <SectionCard title="Display Details">
-              <div className="grid gap-4">
-                <FormField label="Header Image">
-                  <IconInput
-                    icon={LuImage}
-                    onChange={(event) => updateField('heroImageUrl', event.target.value)}
-                    placeholder="Paste header image URL"
-                    value={draft.heroImageUrl}
-                  />
-                </FormField>
-
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-1">
-                  <FormField label="Location">
-                    <IconInput
-                      icon={LuMapPin}
-                      onChange={(event) => updateField('location', event.target.value)}
-                      placeholder="Enter event location"
-                      value={draft.location}
-                    />
-                  </FormField>
-
-                  <FormField label="Date">
-                    <IconInput
-                      icon={LuCalendarDays}
-                      inputClassName="appearance-none"
-                      onChange={(event) => updateField('date', formatDateForDisplay(event.target.value))}
-                      type="date"
-                      value={formatDateForInput(draft.date)}
-                    />
-                  </FormField>
-                </div>
-              </div>
-            </SectionCard>
           </div>
-        </div>
-
-        <div className="mt-6 flex justify-end border-t border-divider/70 pt-5">
-          <button
-            className="rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95"
-            onClick={onSave}
-            type="button"
-          >
-            Save
-          </button>
+          <input
+            accept="image/*"
+            className="sr-only"
+            id={headerImageInputId}
+            onChange={handleHeaderImageUpload}
+            type="file"
+          />
         </div>
       </div>
-    </GlassPanel>
+
+      <label className="block">
+        <FieldLabel>Headline</FieldLabel>
+        <div className="mt-2">
+          <UnderlineInput
+            onChange={(event) => updateField('title', event.target.value)}
+            placeholder="Enter event headline"
+            value={draft.title}
+          />
+        </div>
+      </label>
+
+      <label className="block">
+        <FieldLabel>Description</FieldLabel>
+        <div className="mt-2">
+          <TextDropTextarea
+            dropHint=""
+            onValueChange={(value) => updateField('description', value)}
+            rows={3}
+            textareaClassName="min-h-20 text-[13px]"
+            value={draft.description}
+          />
+        </div>
+      </label>
+
+      <label className="block">
+        <FieldLabel>Location</FieldLabel>
+        <div className="mt-2">
+          <UnderlineIconInput
+            icon={LuMapPin}
+            onChange={(event) => updateField('location', event.target.value)}
+            placeholder="Enter event location"
+            value={draft.location}
+          />
+        </div>
+      </label>
+
+      <label className="block">
+        <FieldLabel>Date</FieldLabel>
+        <div className="mt-2">
+          <UnderlineIconInput
+            icon={LuCalendarDays}
+            inputClassName="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+            inputRef={dateInputRef}
+            onChange={(event) => updateField('date', formatDateForDisplay(event.target.value))}
+            onContainerClick={handleDateFieldClick}
+            type="date"
+            value={formatDateForInput(draft.date)}
+          />
+        </div>
+      </label>
+
+      <div className="pt-1">
+        <button
+          className="w-full rounded-full bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-card transition hover:brightness-95"
+          onClick={onSave}
+          type="button"
+        >
+          Save
+        </button>
+      </div>
+    </section>
   )
 }

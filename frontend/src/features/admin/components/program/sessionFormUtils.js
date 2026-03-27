@@ -4,6 +4,8 @@ export {
   createAction,
   emptySession,
   getSessionTypeLabel,
+  getSessionTypeTone,
+  sessionTypeToneClassNames,
   normalizeSession,
   removeActionById,
   sortSessions,
