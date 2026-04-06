@@ -1,0 +1,6 @@
+export const ROLES = Object.freeze({
+  ADMIN: 'ADMIN',
+  FACILITATOR: 'FACILITATOR',
+  PARTICIPANT: 'PARTICIPANT',
+  ATTENDEE: 'PARTICIPANT',
+})
